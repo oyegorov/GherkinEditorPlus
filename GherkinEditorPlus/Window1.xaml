@@ -24,44 +24,60 @@
     xmlns:forms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
 	Title="GherkinEditor" Height="500" Width="700"
 	>
-	<DockPanel>
-		<ToolBar DockPanel.Dock="Top">
-			<ToolBar.Resources>
-				<Style TargetType="{x:Type Image}">
-					<Style.Triggers>
-						<DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType={x:Type ButtonBase}, AncestorLevel=1}, Path=IsEnabled}" Value="False">
-							<Setter Property="Opacity" Value="0.30" />
-						</DataTrigger>
-					</Style.Triggers>
-				</Style>
-			</ToolBar.Resources>
-			<Button Click="openFileClick"><Image Source="Images/Open.png" Height="16"/></Button>
-			<Button Click="saveFileClick"><Image Source="Images/Save.png" Height="16"/></Button>
-			<Separator/>
-			<Button Command="Cut"><Image Source="Images/Cut.png" Height="16"/></Button>
-			<Button Command="Copy"><Image Source="Images/Copy.png" Height="16"/></Button>
-			<Button Command="Paste"><Image Source="Images/Paste.png" Height="16"/></Button>
-			<Button Command="Delete"><Image Source="Images/Delete.png" Height="16"/></Button>
-		    <Separator/>
-			<Button Command="Undo"><Image Source="Images/Undo.png" Height="16"/></Button>
-			<Button Command="Redo"><Image Source="Images/Redo.png" Height="16"/></Button>
-			<Separator/>
-			<CheckBox IsChecked="{Binding ElementName=textEditor,Path=WordWrap}">
-				<Image Source="Images/WordWrap.png" Height="16"/>
-			</CheckBox>
-			<CheckBox IsChecked="{Binding ElementName=textEditor,Path=ShowLineNumbers}">
-				<TextBlock Width="16" TextAlignment="Center">#</TextBlock>
-			</CheckBox>
-			<CheckBox IsChecked="{Binding ElementName=textEditor,Path=Options.ShowEndOfLine}">
-				<TextBlock Width="16" TextAlignment="Center">¶</TextBlock>
-			</CheckBox>
+    <DockPanel>
+        <ToolBar DockPanel.Dock="Top">
+            <ToolBar.Resources>
+                <Style TargetType="{x:Type Image}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType={x:Type ButtonBase}, AncestorLevel=1}, Path=IsEnabled}" Value="False">
+                            <Setter Property="Opacity" Value="0.30" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ToolBar.Resources>
+            <Button Click="openFileClick">
+                <Image Source="Images/Open.png" Height="16"/>
+            </Button>
+            <Button Click="saveFileClick">
+                <Image Source="Images/Save.png" Height="16"/>
+            </Button>
+            <Separator/>
+            <Button Command="Cut">
+                <Image Source="Images/Cut.png" Height="16"/>
+            </Button>
+            <Button Command="Copy">
+                <Image Source="Images/Copy.png" Height="16"/>
+            </Button>
+            <Button Command="Paste">
+                <Image Source="Images/Paste.png" Height="16"/>
+            </Button>
+            <Button Command="Delete">
+                <Image Source="Images/Delete.png" Height="16"/>
+            </Button>
+            <Separator/>
+            <Button Command="Undo">
+                <Image Source="Images/Undo.png" Height="16"/>
+            </Button>
+            <Button Command="Redo">
+                <Image Source="Images/Redo.png" Height="16"/>
+            </Button>
+            <Separator/>
+            <CheckBox IsChecked="{Binding ElementName=textEditor,Path=WordWrap}">
+                <Image Source="Images/WordWrap.png" Height="16"/>
+            </CheckBox>
+            <CheckBox IsChecked="{Binding ElementName=textEditor,Path=ShowLineNumbers}">
+                <TextBlock Width="16" TextAlignment="Center">#</TextBlock>
+            </CheckBox>
+            <CheckBox IsChecked="{Binding ElementName=textEditor,Path=Options.ShowEndOfLine}">
+                <TextBlock Width="16" TextAlignment="Center">¶</TextBlock>
+            </CheckBox>
         </ToolBar>
-		<Grid>
-			<Grid.ColumnDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
                 <!--ColumnDefinition Width="100"/-->
                 <ColumnDefinition Width="1*"/>
-			</Grid.ColumnDefinitions>
-			<!--DockPanel Grid.Column="1" Margin="4 0 0 0">
+            </Grid.ColumnDefinitions>
+            <!--DockPanel Grid.Column="1" Margin="4 0 0 0">
 				<ComboBox Name="propertyGridComboBox" DockPanel.Dock="Top"
 				          SelectedIndex="0" SelectionChanged="propertyGridComboBoxSelectionChanged">
 					<ComboBoxItem>TextEditor</ComboBoxItem>
@@ -72,13 +88,13 @@
 					<forms:PropertyGrid x:Name="propertyGrid"/>
 				</WindowsFormsHost>
             </DockPanel-->
-            <!--GridSplitter Grid.Column="1" Width="4" HorizontalAlignment="Left"/-->            
+            <!--GridSplitter Grid.Column="1" Width="4" HorizontalAlignment="Left"/-->
             <avalonEdit:TextEditor
 				Name="textEditor"
 				FontFamily="Consolas"
 				FontSize="10pt"
 			>
-			</avalonEdit:TextEditor>
-		</Grid>
+            </avalonEdit:TextEditor>
+        </Grid>
     </DockPanel>
 </Window>
