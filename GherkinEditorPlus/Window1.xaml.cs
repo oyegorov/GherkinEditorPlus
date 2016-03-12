@@ -22,6 +22,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 using System.Xml;
+using GherkinEditorPlus.AutoCompletion;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Highlighting;
@@ -31,37 +32,53 @@ namespace GherkinEditorPlus
 {
 	public partial class Window1
 	{
-        private readonly Languages _languages;  
+        private readonly Languages _languages;
 
-		public Window1()
-		{
-			// Load our custom highlighting definition
-			IHighlightingDefinition customHighlighting;
-			using (Stream s = typeof(Window1).Assembly.GetManifestResourceStream("GherkinEditorPlus.CustomHighlighting.xshd")) {
-				if (s == null)
-					throw new InvalidOperationException("Could not find embedded resource");
-				using (XmlReader reader = new XmlTextReader(s)) {
-					customHighlighting = ICSharpCode.AvalonEdit.Highlighting.Xshd.
-						HighlightingLoader.Load(reader, HighlightingManager.Instance);
-				}
-			}
-			// and register it in the HighlightingManager
-			HighlightingManager.Instance.RegisterHighlighting("Custom Highlighting", new[] { ".feature" }, customHighlighting);
-			
-			InitializeComponent();			
-			textEditor.SyntaxHighlighting = customHighlighting;
+	    public Window1()
+	    {
+	        // Load our custom highlighting definition
+	        IHighlightingDefinition customHighlighting;
+	        using (
+	            Stream s = typeof (Window1).Assembly.GetManifestResourceStream("GherkinEditorPlus.CustomHighlighting.xshd")
+	            )
+	        {
+	            if (s == null)
+	                throw new InvalidOperationException("Could not find embedded resource");
+	            using (XmlReader reader = new XmlTextReader(s))
+	            {
+	                customHighlighting = ICSharpCode.AvalonEdit.Highlighting.Xshd.
+	                    HighlightingLoader.Load(reader, HighlightingManager.Instance);
+	            }
+	        }
+	        // and register it in the HighlightingManager
+	        HighlightingManager.Instance.RegisterHighlighting(
+	            "Custom Highlighting",
+	            new[] {".feature"},
+	            customHighlighting);
 
-			textEditor.TextArea.TextEntering += Text_editor_text_area_text_entering;
-			textEditor.TextArea.TextEntered += Text_editor_text_area_text_entered;
-			
-			var foldingUpdateTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(2)};
-		    foldingUpdateTimer.Tick += Folding_update_timer_tick;
-			foldingUpdateTimer.Start();
-            _languages = new Languages();
-		    _completionDataLoader = new CompletionDataLoader();
-		}
+	        InitializeComponent();
+	        textEditor.SyntaxHighlighting = customHighlighting;
 
-		string _currentFileName;
+	        textEditor.TextArea.TextEntering += Text_editor_text_area_text_entering;
+	        textEditor.TextArea.TextEntered += Text_editor_text_area_text_entered;
+
+	        var foldingUpdateTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(2)};
+	        foldingUpdateTimer.Tick += Folding_update_timer_tick;
+	        foldingUpdateTimer.Start();
+	        _languages = new Languages();
+	        _completionDataLoader = new CompletionDataLoader();
+
+	        //Loading sample project
+
+	        StepsProvider stepsProvider = new StepsProvider(@"..\..\SampleProject\Bdd.PublicApiTests.csproj");
+
+	        string[] steps = stepsProvider.GetSteps();
+
+            //After this line my video driver throws unhanlded exception...
+	        //textEditor.Text = string.Join(Environment.NewLine, steps);
+        }
+
+	    string _currentFileName;
 		
 		void openFileClick(object sender, RoutedEventArgs e)
 		{

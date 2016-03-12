@@ -1,0 +1,715 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{39C2FCFD-F390-4473-A853-C5A8A490AFD0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Soti.MobiControl.Bdd.PublicApiTests</RootNamespace>
+    <AssemblyName>Soti.MobiControl.Bdd.PublicApiTests</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\_Output_\Debug\Tests\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\_Output_\Release\Tests\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>
+    </DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Soti.MobiControl.Bdd.PublicApiTests.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AutoMapper, Version=3.2.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Common\ExternalLibraries\Automapper\3.2.1.0\Bin\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoMapper.Net4, Version=3.2.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Common\ExternalLibraries\Automapper\3.2.1.0\Bin\AutoMapper.Net4.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Common\ExternalLibraries\ServiceLocation\1.2.0.0\Bin\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Common\ExternalLibraries\Unity\3.5.1404.0\Bin\Microsoft.Practices.Unity.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.ConnectionInfo">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Common\ExternalLibraries\Microsoft.SqlServer\12.0\Bin\Microsoft.SqlServer.ConnectionInfo.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Management.Sdk.Sfc">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Common\ExternalLibraries\Microsoft.SqlServer\12.0\Bin\Microsoft.SqlServer.Management.Sdk.Sfc.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Smo">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Common\ExternalLibraries\Microsoft.SqlServer\12.0\Bin\Microsoft.SqlServer.Smo.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Common\ExternalLibraries\Newtonsoft.Json\6.0.0.0\Bin\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.6.3.13283, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Common\ExternalLibraries\NUnit\2.6.2.12296\Bin\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Soti.Comm">
+      <HintPath>..\..\..\..\..\Common\InternalLibraries\Soti.Comm.Net\1.0\Bin\Soti.Comm.dll</HintPath>
+    </Reference>
+    <Reference Include="Soti.Comm.Protocol">
+      <HintPath>..\..\..\..\..\Common\InternalLibraries\Soti.Comm.Net\1.0\Bin\Soti.Comm.Protocol.dll</HintPath>
+    </Reference>
+    <Reference Include="Soti.Integration.Apple.ITunesStore.Implementation, Version=1.1.0.0, Culture=neutral, PublicKeyToken=d2cf9b6653a62b9b, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\Common\InternalLibraries\Soti.Integration.Apple\1.1.0\Bin\Soti.Integration.Apple.ITunesStore.Implementation.dll</HintPath>
+    </Reference>
+    <Reference Include="Soti.Integration.Apple.VolumePurchaseProgram.Implementation, Version=1.1.0.0, Culture=neutral, PublicKeyToken=d2cf9b6653a62b9b, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\Common\InternalLibraries\Soti.Integration.Apple\1.1.0\Bin\Soti.Integration.Apple.VolumePurchaseProgram.Implementation.dll</HintPath>
+    </Reference>
+    <Reference Include="Soti.MobiControl.DataTypes">
+      <HintPath>..\..\..\..\..\Common\InternalLibraries\Soti.Comm.Net\1.0\Bin\Soti.MobiControl.DataTypes.dll</HintPath>
+    </Reference>
+    <Reference Include="Soti.MobiControl.DeploymentServer">
+      <HintPath>..\..\..\..\..\Common\InternalLibraries\Soti.Comm.Net\1.0\Bin\Soti.MobiControl.DeploymentServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Soti.Simulation.Device">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Common\InternalLibraries\Soti.Simulation\Core\1.0\Bin\Soti.Simulation.Device.dll</HintPath>
+    </Reference>
+    <Reference Include="Soti.Simulation.Device.Android">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Common\InternalLibraries\Soti.Simulation\Android\1.0\Bin\Soti.Simulation.Device.Android.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Common\ExternalLibraries\Microsoft.AspNet.WebApi\5.2.3\Bin\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="TechTalk.SpecFlow">
+      <HintPath>..\..\..\..\..\Common\ExternalLibraries\SpecFlow\1.9.0.77\Bin\TechTalk.SpecFlow.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\ResourcesManager.cs">
+      <Link>Properties\ResourcesManager.cs</Link>
+    </Compile>
+    <Compile Include="Features\AndroidWork\BooleanDeviceFeatureControlPayloads.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BooleanDeviceFeatureControlPayloads.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\AndroidWork\DfcLocationAccuracy.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DfcLocationAccuracy.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\AndroidWork\DfcSharingAcrossProfiles.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DfcSharingAcrossProfiles.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\AndroidWork\EmailConfiguration.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EmailConfiguration.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\AndroidWork\TernaryStateDeviceFeatureControlPayloads.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TernaryStateDeviceFeatureControlPayloads.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\AndroidWork\WipeDeviceWithBypassFactoryResetProtection.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WipeDeviceWithBypassFactoryResetProtection.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\DeviceConfigurationManagement.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DeviceConfigurationManagement.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\PublicAPI\AppleVolumePurchaseProgram\AssignAppleVppLicenseMultiple.feature.cs">
+      <DependentUpon>AssignAppleVppLicenseMultiple.feature</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Steps\CreateRuleStepsAndroid.cs" />
+    <Compile Include="Steps\DeviceConfigurationManagementSteps.cs" />
+    <Compile Include="Steps\DeviceNoteManagementSteps.cs" />
+    <Compile Include="Features\DeviceNote.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DeviceNote.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\PublicAPI\AppleVolumePurchaseProgram\CleanupVppAccount.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CleanupVppAccount.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\PublicAPI\DeviceAdministration\DeviceProfiles.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DeviceProfiles.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\PublicAPI\AppleVolumePurchaseProgram\VppRedemptionCode.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>VppRedemptionCode.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\AppleVolumePurchaseProgram\VPPRedemptionCodeSteps.cs" />
+    <Compile Include="Features\PublicAPI\DeviceAdministration\DeviceActions.feature.cs">
+      <DependentUpon>DeviceActions.feature</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Features\PublicAPI\Servers\Servers.feature.cs">
+      <DependentUpon>Servers.feature</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Steps\AppleVolumePurchaseProgram\ReclaimAllNotUsedLicensesSteps.cs" />
+    <Compile Include="Steps\Security\OldAccessControlManagerSteps.cs" />
+    <Compile Include="Steps\LoggingSteps.cs" />
+    <Compile Include="Steps\Servers\ServersSteps.cs" />
+    <Compile Include="Steps\CustomAttributes\CustomAttributesSteps.cs" />
+    <Compile Include="TestData\GroupAccessRights.cs" />
+    <Compile Include="Utils\CommandLineHostedService.cs" />
+    <Compile Include="Features\EnrollAfWDevice.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EnrollAfWDevice.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\CreateAndroidRuleSteps.cs" />
+    <Compile Include="Steps\Devices\DevicesSteps.cs" />
+    <Compile Include="Features\DeletePackageFromCatalog.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DeletePackageFromCatalog.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\PublicAPI\Device\Devices.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Devices.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\PublicAPI\AppleVolumePurchaseProgram\RefreshAppleVppAccount.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RefreshAppleVppAccount.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\PublicAPI\AppleVolumePurchaseProgram\AssignAppleVppLicense.feature.cs">
+      <DependentUpon>AssignAppleVppLicense.feature</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Features\PublicAPI\AppleVolumePurchaseProgram\UpdateAppleVppAccount.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UpdateAppleVppAccount.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\AppleVolumePurchaseProgram\AssignAppleVppLicenseSteps.cs" />
+    <Compile Include="Steps\AppleVolumePurchaseProgram\UpdateAppleVppAccountSteps.cs" />
+    <Compile Include="Steps\AppleVolumePurchaseProgram\RefreshAppleVppAccountSteps.cs" />
+    <Compile Include="Steps\DeletePackageFromCatalogSteps.cs" />
+    <Compile Include="Features\AddPackageInProfile.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AddPackageInProfile.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\PackageSummary.feature.cs">
+      <DependentUpon>PackageSummary.feature</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="Features\PublicAPI\AppleVolumePurchaseProgram\AddAppleVppAccount.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AddAppleVppAccount.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\PublicAPI\DeviceGroup\DeviceGroupManagement.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DeviceGroupManagement.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\PublicAPI\DeviceInformationManagement\GetDeviceList.feature.cs">
+      <DependentUpon>GetDeviceList.feature</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Features\CustomDataType.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CustomDataType.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\PublicAPI\Device\DeviceApplications.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DeviceApplications.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\ProfileManagement.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProfileManagement.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\StandaloneTestSetups.feature.cs">
+      <DependentUpon>StandaloneTestSetups.feature</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Features\CreateLdapConnection.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CreateLdapConnection.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\CreateRule.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CreateRule.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\EnrollIosDevice.feature.cs">
+      <DependentUpon>EnrollIosDevice.feature</DependentUpon>
+      <SubType>Code</SubType>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="Features\PublicAPI\DeviceAdministration\ApiSecurityPermissions.feature.cs">
+      <DependentUpon>ApiSecurityPermissions.feature</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Features\PublicAPI\DeviceAdministration\CheckInDevice.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CheckInDevice.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\PublicAPI\DeviceAdministration\LocateDevice.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LocateDevice.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\PublicAPI\DeviceAdministration\Lockdevice.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Lockdevice.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\PackageList.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PackageList.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\PublicAPI\DeviceAdministration\SendMessage.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SendMessage.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\SpecifyProfileAssignmentOptions.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SpecifyProfileAssignmentOptions.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\PublicAPI\DeviceAdministration\SetPasscode.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SetPasscode.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\PublicAPI\DeviceAdministration\UnenrollDevice.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UnenrollDevice.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\UploadApnsCertificate.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UploadApnsCertificate.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\UploadPackage.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UploadPackage.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\PublicAPI\DeviceAdministration\WipeDevice.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WipeDevice.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Hooks.cs" />
+    <Compile Include="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\AddPackageInProfileSteps.cs" />
+    <Compile Include="Steps\AppleVolumePurchaseProgram\AddAppleVPPAccountSteps.cs" />
+    <Compile Include="Steps\CreateLdapConnectionSteps.cs" />
+    <Compile Include="Steps\CreateRuleSteps.cs" />
+    <Compile Include="Steps\CustomDataTypeSteps.cs" />
+    <Compile Include="Steps\DeviceAdministrationSteps.cs" />
+    <Compile Include="Steps\DeviceGroup\DeviceGroupSteps.cs" />
+    <Compile Include="Steps\Devices\DeviceApplicationsSteps.cs" />
+    <Compile Include="Steps\Devices\DeviceCommonSteps.cs" />
+    <Compile Include="Steps\Devices\DeviceGroupManagementSteps.cs" />
+    <Compile Include="Steps\EnrollAfWDeviceSteps.cs" />
+    <Compile Include="Steps\EnrollIosDeviceSteps.cs" />
+    <Compile Include="Steps\PackageListSteps.cs" />
+    <Compile Include="Steps\PackageSummarySteps.cs" />
+    <Compile Include="Steps\ProfileManagementSteps.cs" />
+    <Compile Include="Steps\Security\AccessControlManagerSteps.cs" />
+    <Compile Include="Steps\Security\PrincipalManagementSteps.cs" />
+    <Compile Include="Steps\SSPSteps.cs" />
+    <Compile Include="Steps\SettingProfileAssignmentsOptionsSteps.cs" />
+    <Compile Include="Steps\UploadApnsCertificateSteps.cs" />
+    <Compile Include="Steps\BasicSteps.cs" />
+    <Compile Include="TestData\AfWEnrollmentData.cs" />
+    <Compile Include="TestData\AndroidRuleData.cs" />
+    <Compile Include="TestData\AntialiasedTable.cs" />
+    <Compile Include="TestData\AppleProductAppCatalogEntryData.cs" />
+    <Compile Include="TestData\AppleVppProductAppCatalogEntryData.cs" />
+    <Compile Include="TestData\AppleVppProductIdentifierInstallStatusData.cs" />
+    <Compile Include="TestData\AppleVppProductIdentifierData.cs" />
+    <Compile Include="TestData\AppleVppProductIdentifierChangeData.cs" />
+    <Compile Include="TestData\AppleVppProductLicenseData.cs" />
+    <Compile Include="TestData\ApiClient.cs" />
+    <Compile Include="TestData\ApnsCertificateInfo.cs" />
+    <Compile Include="TestData\DeviceNoteData.cs" />
+    <Compile Include="TestData\LdapUser.cs" />
+    <Compile Include="TestData\PackageData.cs" />
+    <Compile Include="TestData\PackageListFilterData.cs" />
+    <Compile Include="TestData\PackageVersionData.cs" />
+    <Compile Include="TestData\Context.cs" />
+    <Compile Include="TestData\DeviceData.cs" />
+    <Compile Include="TestData\DeviceGroupInfo.cs" />
+    <Compile Include="TestData\ErrorInfo.cs" />
+    <Compile Include="TestData\LdapConnectionData.cs" />
+    <Compile Include="TestData\LdapConnectionInfo.cs" />
+    <Compile Include="TestData\AppleVppProductIdentifierCriteriaData.cs" />
+    <Compile Include="TestData\PrincipalData.cs" />
+    <Compile Include="TestData\ProfileStatusData.cs" />
+    <Compile Include="TestData\RuleInfo.cs" />
+    <Compile Include="Utils\AliasResolver.cs" />
+    <Compile Include="Utils\AppleVppSimulator\ResetSimulatorResponseInfo.cs" />
+    <Compile Include="Utils\AppleVppSimulator\ResetSimulatorResponse.cs" />
+    <Compile Include="Utils\AppleVppSimulator\AssociateUsersResponseInfo.cs" />
+    <Compile Include="Utils\AppleVppSimulator\VppToken.cs" />
+    <Compile Include="Utils\AppleVppSimulator\VppUser.cs" />
+    <Compile Include="Utils\AppleVppSimulator\AssociateUsersResponse.cs" />
+    <Compile Include="Utils\AppCatalogHelper.cs" />
+    <Compile Include="Utils\ErrorHelper.cs" />
+    <Compile Include="MobiControlServiceHost.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Steps\CommonSteps.cs" />
+    <Compile Include="TestData\PackageFileData.cs" />
+    <Compile Include="TestData\PackageRequestData.cs" />
+    <Compile Include="Utils\ISimulatorExtensions.cs" />
+    <Compile Include="Utils\FeatureContextExtensions.cs" />
+    <Compile Include="Utils\MobiControlApplication.cs" />
+    <Compile Include="Utils\Networking\HttpClient.cs" />
+    <Compile Include="Utils\Networking\RequestFormat.cs" />
+    <Compile Include="Utils\Networking\RequestResult.cs" />
+    <Compile Include="Utils\ObjectInitializer.cs" />
+    <Compile Include="Utils\DatabaseHelper.cs" />
+    <Compile Include="Utils\MobiControlProcessRunner.cs" />
+    <Compile Include="Utils\ProcessRunner.cs" />
+    <Compile Include="Utils\ReflectionUtils.cs" />
+    <Compile Include="Utils\PackageHelper.cs" />
+    <Compile Include="Steps\UploadingPackageSteps.cs" />
+    <Compile Include="TestData\RuleData.cs" />
+    <Compile Include="Utils\ScenarioContextExtensions.cs" />
+    <Compile Include="Utils\AppleVppSimulator\AppleVppSimulator.cs" />
+    <Compile Include="Utils\SimulatorFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Utils\TableUtils.cs" />
+    <Compile Include="Utils\PollingHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Database.config">
+      <Link>Database.config</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="App.config" />
+    <None Include="Features\AddPackageInProfile.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>AddPackageInProfile.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\AndroidWork\BooleanDeviceFeatureControlPayloads.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>BooleanDeviceFeatureControlPayloads.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\AndroidWork\DfcLocationAccuracy.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>DfcLocationAccuracy.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\AndroidWork\DfcSharingAcrossProfiles.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>DfcSharingAcrossProfiles.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\AndroidWork\EmailConfiguration.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>EmailConfiguration.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\AndroidWork\TernaryStateDeviceFeatureControlPayloads.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>TernaryStateDeviceFeatureControlPayloads.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\AndroidWork\WipeDeviceWithBypassFactoryResetProtection.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>WipeDeviceWithBypassFactoryResetProtection.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\DeletePackageFromCatalog.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>DeletePackageFromCatalog.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\DeviceConfigurationManagement.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>DeviceConfigurationManagement.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\EnrollAfWDevice.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>EnrollAfWDevice.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\DeviceNote.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>DeviceNote.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\PackageSummary.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>PackageSummary.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\PublicAPI\AppleVolumePurchaseProgram\AddAppleVppAccount.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>AddAppleVppAccount.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\PublicAPI\AppleVolumePurchaseProgram\AssignAppleVppLicenseMultiple.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>AssignAppleVppLicenseMultiple.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\PublicAPI\AppleVolumePurchaseProgram\CleanupVppAccount.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>CleanupVppAccount.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\PublicAPI\AppleVolumePurchaseProgram\RefreshAppleVppAccount.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>RefreshAppleVppAccount.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\PublicAPI\AppleVolumePurchaseProgram\AssignAppleVppLicense.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>AssignAppleVppLicense.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\PublicAPI\AppleVolumePurchaseProgram\VppRedemptionCode.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>VppRedemptionCode.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\PublicAPI\DeviceAdministration\DeviceProfiles.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>DeviceProfiles.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\PublicAPI\DeviceAdministration\DeviceActions.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>DeviceActions.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\PublicAPI\DeviceGroup\DeviceGroupManagement.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>DeviceGroupManagement.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\PublicAPI\DeviceInformationManagement\GetDeviceList.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>GetDeviceList.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\CustomDataType.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>CustomDataType.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\PublicAPI\Device\DeviceApplications.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>DeviceApplications.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\ProfileManagement.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>ProfileManagement.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\PublicAPI\Device\Devices.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Devices.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\PublicAPI\AppleVolumePurchaseProgram\UpdateAppleVppAccount.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>UpdateAppleVppAccount.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\PublicAPI\Servers\Servers.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Servers.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\StandaloneTestSetups.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>StandaloneTestSetups.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\CreateLdapConnection.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>CreateLdapConnection.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\CreateRule.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>CreateRule.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\EnrollIosDevice.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>EnrollIosDevice.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\PublicAPI\DeviceAdministration\ApiSecurityPermissions.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>ApiSecurityPermissions.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\PublicAPI\DeviceAdministration\CheckInDevice.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>CheckInDevice.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\PublicAPI\DeviceAdministration\LocateDevice.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>LocateDevice.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\PublicAPI\DeviceAdministration\Lockdevice.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Lockdevice.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\PackageList.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>PackageList.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\PublicAPI\DeviceAdministration\SendMessage.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>SendMessage.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\PublicAPI\DeviceAdministration\SetPasscode.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>SetPasscode.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\PublicAPI\DeviceAdministration\UnenrollDevice.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>UnenrollDevice.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\SpecifyProfileAssignmentOptions.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>SpecifyProfileAssignmentOptions.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\UploadApnsCertificate.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>UploadApnsCertificate.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\UploadPackage.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>UploadPackage.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\PublicAPI\DeviceAdministration\WipeDevice.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>WipeDevice.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Soti.MobiControl.Bdd.PublicApiTests.snk" />
+    <None Include="test.pfx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Apple\VolumePurchaseProgram\Apple.VolumePurchaseProgram.csproj">
+      <Project>{9cf7652b-5101-4528-bccc-66782f0680e2}</Project>
+      <Name>Apple.VolumePurchaseProgram</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MobiControl .NET\Core\Core.csproj">
+      <Project>{ED642886-2356-49DE-80C6-FF011DF54AC1}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MobiControl .NET\Api.DataContracts\Api.DataContracts.csproj">
+      <Project>{7b47746e-64af-44f5-8951-ef53989c8f0b}</Project>
+      <Name>Api.DataContracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MobiControl .NET\Entities\Entities.csproj">
+      <Project>{539fc724-5377-41fd-a4b2-f537ddccc397}</Project>
+      <Name>Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Security\Security\Security.csproj">
+      <Project>{BAA4260F-D192-4934-BC3B-9D16E8857568}</Project>
+      <Name>Security</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ManagementService.Contracts\ManagementService.Contracts.csproj">
+      <Project>{4e9b3d2c-13e1-4d80-bde9-6b554732f554}</Project>
+      <Name>ManagementService.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ManagementService.PublicApi.Implementation\ManagementService.PublicApi.Implementation.csproj">
+      <Project>{5e185a0f-3325-430f-b39e-cac761fe2945}</Project>
+      <Name>ManagementService.PublicApi.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ManagementService.PublicApi\ManagementService.PublicApi.csproj">
+      <Project>{202d18cb-5bfd-485b-8829-9e99e09e4c0d}</Project>
+      <Name>ManagementService.PublicApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WebApi\WebApi.csproj">
+      <Project>{D1C687C2-B25E-46D4-B168-C093290D4FC5}</Project>
+      <Name>WebApi</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\Database\SQLServerUpdate1240.SQL">
+      <Link>Scripts\SQLServerUpdate1240.SQL</Link>
+    </Content>
+    <Content Include="Scripts\DeleteTableRows.sql" />
+    <Content Include="ToDoList.txt" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

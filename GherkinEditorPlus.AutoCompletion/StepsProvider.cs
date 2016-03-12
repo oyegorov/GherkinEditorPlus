@@ -59,7 +59,7 @@ namespace GherkinEditorPlus.AutoCompletion
             _steps = stepsHashset.ToArray();
         }
 
-        public string[] GetSteps(string searchPattern)
+        public string[] GetSteps(string searchPattern = null)
         {
             if (_steps == null)
                 return new string[0];
@@ -67,6 +67,8 @@ namespace GherkinEditorPlus.AutoCompletion
             IEnumerable<string> filteredSteps = _steps;
             if (!String.IsNullOrEmpty(searchPattern))
                 filteredSteps = filteredSteps.Where(s => s.IndexOf(searchPattern, StringComparison.OrdinalIgnoreCase) >= 0);
+            else
+                filteredSteps = _steps;
 
             return filteredSteps.OrderBy(r => r).ToArray();
         }

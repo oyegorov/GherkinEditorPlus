@@ -86,6 +86,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <ProjectReference Include="..\GherkinEditorPlus.AutoCompletion\GherkinEditorPlus.AutoCompletion.csproj">
+      <Project>{0f4aec99-2a78-4b3d-87c5-b53e0ed0d3bb}</Project>
+      <Name>GherkinEditorPlus.AutoCompletion</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ICSharpCode.AvalonEdit\ICSharpCode.AvalonEdit.csproj">
       <Project>{6C55B776-26D4-4DB3-A6AB-87E783B2F3D1}</Project>
       <Name>ICSharpCode.AvalonEdit</Name>
