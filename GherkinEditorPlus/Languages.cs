@@ -103,6 +103,7 @@ namespace GherkinEditorPlus
         public Language GetByIso(string isoCode)
         {
             return Find(l => l.IsoCode == isoCode) ?? new Language("en", "English", "English");
+
         }        
     }
 }
