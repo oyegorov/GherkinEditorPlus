@@ -1,9 +1,11 @@
 ﻿using System;
 using System.IO;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using System.Xml;
+using GherkinEditorPlus.Model;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Highlighting;
@@ -51,6 +53,22 @@ namespace GherkinEditorPlus.UserControls
             foldingUpdateTimer.Start();
             _languages = new Languages();
             _completionDataLoader = new CompletionDataLoader();
+        }
+
+        public Feature Feature
+        {
+            get { return (Feature)GetValue(FeatureProperty); }
+            set { SetValue(FeatureProperty, value); }
+        }
+        public static readonly DependencyProperty FeatureProperty = DependencyProperty.Register("Feature", typeof(Feature), typeof(DocumentEditor), new PropertyMetadata(FeatureChanged));
+
+        private static void FeatureChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            DocumentEditor self = (DocumentEditor)d;
+
+            var feature = e.NewValue as Feature;
+            if (feature != null)
+                self.LoadDocument(feature.File);
         }
 
         public void LoadDocument(string documentPath)

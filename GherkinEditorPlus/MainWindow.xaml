@@ -6,6 +6,7 @@
     xmlns:userControls="clr-namespace:GherkinEditorPlus.UserControls"
     Title="Gherkin Editor Plus" WindowStartupLocation="CenterScreen"
     Icon="Images/gherkin.png"
+    x:Name="_self"
 	>
     <DockPanel>
         <ToolBar DockPanel.Dock="Top">
@@ -65,7 +66,25 @@
                 <userControls:ProjectTreeView x:Name="_projectTreeView" FeatureNodeDoubleClick="OnFeatureNodeDoubleClick"/>
             </DockPanel>
             <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Left" />
-            <userControls:DocumentEditor x:Name="_documentEditor" Grid.Column="2"></userControls:DocumentEditor>
+
+            <TabControl Grid.Column="2" ItemsSource="{Binding ElementName=_self, Path=EditedFeatures}" SelectedItem="{Binding ElementName=_self, Path=ActiveFeature, Mode=TwoWay}">
+                <TabControl.ContentTemplate>
+                    <DataTemplate>
+                        <userControls:DocumentEditor Feature="{Binding}"></userControls:DocumentEditor>
+                    </DataTemplate>
+                </TabControl.ContentTemplate>
+
+                <TabControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding Name}" />
+                            <Button Background="Transparent" BorderThickness="0" Margin="5,0,0,0" Command="{Binding ElementName=_self, Path=CloseEditedFeatureCommand}" CommandParameter="{Binding}">
+                                <Image Source="Images/close_tab.png" Width="12" Height="12" />
+                            </Button>
+                        </StackPanel>
+                    </DataTemplate>
+                 </TabControl.ItemTemplate>
+            </TabControl>
         </Grid>
     </DockPanel>
 </Window>
