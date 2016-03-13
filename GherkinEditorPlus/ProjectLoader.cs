@@ -79,10 +79,28 @@ namespace GherkinEditorPlus
         {
             Folder folder = new Folder(
                 folderInternal.Name,
-                folderInternal.Features.Select(ifeature => new Feature(ifeature.Name, new List<Scenario>(), ifeature.FileName)),
+                folderInternal.Features.Select(CreateFeatureFromInternal),
                 folderInternal.Folders.Select(CreateFolderFromInternal));
 
             return folder;
+        }
+
+        private static Feature CreateFeatureFromInternal(FeatureInternal featureInternal)
+        {
+            var feature = new Feature(featureInternal.Name, new List<Scenario>(), featureInternal.FileName);
+
+            string[] featureLines = File.ReadAllLines(featureInternal.FileName);
+
+            Scenario currentScenario;
+
+            foreach (string featureLine in featureLines)
+            {
+                
+            }
+
+
+
+            return feature;
         }
 
         private class FolderInternal
