@@ -22,7 +22,6 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 using System.Xml;
-using GherkinEditorPlus.AutoCompletion;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Highlighting;
