@@ -23,6 +23,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using System.Xml;
 using GherkinEditorPlus.Model;
+using GherkinEditorPlus.UserControls;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Highlighting;
@@ -71,13 +72,18 @@ namespace GherkinEditorPlus
             //Loading sample project
 
             Project project = ProjectLoader.LoadProject(@"..\..\SampleProject\Bdd.PublicApiTests.csproj");
-
-	        Console.WriteLine(project);
+	        _projectTreeView.Project = project;
         }
 
 	    string _currentFileName;
-		
-		void openFileClick(object sender, RoutedEventArgs e)
+
+        private void FeatureNodeDoubleClick(object sender, FeatureNodeDoubleClickEventArgs args)
+        {
+            textEditor.Load(args.Feature.File);
+            textEditor.SyntaxHighlighting = HighlightingManager.Instance.GetDefinitionByExtension(Path.GetExtension(args.Feature.File));
+        }
+
+        void openFileClick(object sender, RoutedEventArgs e)
 		{
 			var dlg = new OpenFileDialog {CheckFileExists = true};
 		    if (!((bool) dlg.ShowDialog())) return;

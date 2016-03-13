@@ -4,8 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:GherkinEditorPlus.UserControls"
+             xmlns:model="clr-namespace:GherkinEditorPlus.Model"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300" x:Name="_self">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
@@ -36,6 +37,31 @@
                 </Style>
             </TextBox.Style>
         </TextBox>
-        <TreeView Grid.Row="1" Margin="2" BorderBrush="Gainsboro"></TreeView>
+        <TreeView Grid.Row="1" Margin="2" BorderBrush="Gainsboro" ItemsSource="{Binding Path=Project.Folders, ElementName=_self}">
+            <TreeView.Resources>
+                <local:ProjectItemsConverter x:Key="ProjectItemsConverter"/>
+
+                <HierarchicalDataTemplate DataType="{x:Type model:Folder}">
+                    <HierarchicalDataTemplate.ItemsSource>
+                        <MultiBinding Converter="{StaticResource ProjectItemsConverter}">
+                            <Binding Path="Features" />
+                            <Binding Path="Folders" />
+                        </MultiBinding>
+                    </HierarchicalDataTemplate.ItemsSource>
+                    
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/GherkinEditorPlus;component/Images/Folder.png" Margin="0,0,5,0" />
+                        <TextBlock Text="{Binding Name}" />
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+
+                <HierarchicalDataTemplate DataType="{x:Type model:Feature}">
+                    <StackPanel Orientation="Horizontal" MouseDown="FeatureNodeOnMouseDown">
+                        <Image Source="/GherkinEditorPlus;component/Images/Feature.png" Margin="0,0,5,0" />
+                        <TextBlock Text="{Binding Name}" />
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+            </TreeView.Resources>
+        </TreeView>
     </Grid>
 </UserControl>
