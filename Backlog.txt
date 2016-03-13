@@ -1,0 +1,6 @@
+1. Add email notification when something bad happens.
+2. TFS integration support
+3. Multi file support.
+4. Editing one file only.
+
+
