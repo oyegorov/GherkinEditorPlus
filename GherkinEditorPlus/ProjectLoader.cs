@@ -65,7 +65,9 @@ namespace GherkinEditorPlus
                     }
                 }
 
-                currentFolder.Features.Add(new FeatureInternal() {Name = featureName});
+                string fileName = Path.Combine(new FileInfo(projectFilePath).Directory.FullName, includedFeature);
+
+                currentFolder.Features.Add(new FeatureInternal() {Name = featureName, FileName = fileName });
             }
 
             var rootFolders = rootFoldersInternal.Select(CreateFolderFromInternal);
@@ -77,7 +79,7 @@ namespace GherkinEditorPlus
         {
             Folder folder = new Folder(
                 folderInternal.Name,
-                folderInternal.Features.Select(ifeature => new Feature(ifeature.Name, new List<Scenario>(), null)),
+                folderInternal.Features.Select(ifeature => new Feature(ifeature.Name, new List<Scenario>(), ifeature.FileName)),
                 folderInternal.Folders.Select(CreateFolderFromInternal));
 
             return folder;
@@ -86,15 +88,14 @@ namespace GherkinEditorPlus
         private class FolderInternal
         {
             public string Name { get; set; }
-
-             public List<FolderInternal> Folders = new List<FolderInternal>();
-
+            public List<FolderInternal> Folders = new List<FolderInternal>();
             public List<FeatureInternal> Features = new List<FeatureInternal>();
         }
 
         private class FeatureInternal
         {
-             public string Name { get; set; }
+            public string Name { get; set; }
+            public string FileName { get; set; }
         }
     }
 }
