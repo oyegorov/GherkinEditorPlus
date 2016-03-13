@@ -22,6 +22,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 using System.Xml;
+using GherkinEditorPlus.Model;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Highlighting;
@@ -67,14 +68,11 @@ namespace GherkinEditorPlus
 	        _languages = new Languages();
 	        _completionDataLoader = new CompletionDataLoader();
 
-	        //Loading sample project
+            //Loading sample project
 
-	        StepsProvider stepsProvider = new StepsProvider(@"..\..\SampleProject\Bdd.PublicApiTests.csproj");
+            Project project = ProjectLoader.LoadProject(@"..\..\SampleProject\Bdd.PublicApiTests.csproj");
 
-	        string[] steps = stepsProvider.GetSteps();
-
-            //After this line my video driver throws unhanlded exception...
-	        //textEditor.Text = string.Join(Environment.NewLine, steps);
+	        Console.WriteLine(project);
         }
 
 	    string _currentFileName;

@@ -32,7 +32,7 @@ namespace GherkinEditorPlus
 
             var includedFeatures = includedStaticFiles.Where(f => f.EndsWith(".feature", StringComparison.OrdinalIgnoreCase));
 
-            List<FolderInternal> rootFolders = new List<FolderInternal>();
+            List<FolderInternal> rootFoldersInternal = new List<FolderInternal>();
 
             foreach (string includedFeature in includedFeatures)
             {
@@ -46,11 +46,11 @@ namespace GherkinEditorPlus
                 {
                     if (currentFolder == null)
                     {
-                        currentFolder = rootFolders.SingleOrDefault(f => f.Name == featureFolder);
+                        currentFolder = rootFoldersInternal.SingleOrDefault(f => f.Name == featureFolder);
                         if (currentFolder == null)
                         {
                             currentFolder = new FolderInternal() {Name = featureFolder};
-                            rootFolders.Add(currentFolder);
+                            rootFoldersInternal.Add(currentFolder);
                         }
                         continue;
                     }
@@ -68,7 +68,19 @@ namespace GherkinEditorPlus
                 currentFolder.Features.Add(new FeatureInternal() {Name = featureName});
             }
 
-            return null;
+            var rootFolders = rootFoldersInternal.Select(CreateFolderFromInternal);
+
+            return new Project(new FileInfo(projectFilePath).Name, new Feature[0], rootFolders);
+        }
+
+        private static Folder CreateFolderFromInternal(FolderInternal folderInternal)
+        {
+            Folder folder = new Folder(
+                folderInternal.Name,
+                folderInternal.Features.Select(ifeature => new Feature(ifeature.Name, new List<Scenario>(), null)),
+                folderInternal.Folders.Select(CreateFolderFromInternal));
+
+            return folder;
         }
 
         private class FolderInternal

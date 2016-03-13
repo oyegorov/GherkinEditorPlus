@@ -13,10 +13,12 @@ namespace GherkinEditorPlus.Model
         }
 
         public string Name { get; private set; }
-
         public ObservableCollection<Scenario> Scenarios { get; private set; }
-
         public string File { get; private set; }
-        
+
+        public override string ToString()
+        {
+            return $"Feature Name: '{Name}'";
+        }
     }
 }

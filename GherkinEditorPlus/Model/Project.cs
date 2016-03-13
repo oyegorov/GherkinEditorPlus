@@ -1,17 +1,16 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 namespace GherkinEditorPlus.Model
 {
-    public class Project
+    public class Project : Folder
     {
-        public Project(IEnumerable<Feature> features, IEnumerable<Folder> folders)
+        public Project(string name, IEnumerable<Feature> features, IEnumerable<Folder> folders):base(name, features, folders)
         {
-            Features = new ObservableCollection<Feature>(features);
-            Folders = new ObservableCollection<Folder>(folders);
         }
 
-        public ObservableCollection<Feature> Features { get; private set; }
-        public ObservableCollection<Folder> Folders { get; private set; }
+        public override string ToString()
+        {
+            return $"Project Name: '{Name}'";
+        }
     }
 }
