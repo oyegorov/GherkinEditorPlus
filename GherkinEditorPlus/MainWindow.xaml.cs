@@ -71,8 +71,7 @@ namespace GherkinEditorPlus
             //Loading sample project
 
             Project project = ProjectLoader.LoadProject(@"..\..\SampleProject\Bdd.PublicApiTests.csproj");
-
-	        Console.WriteLine(project);
+	        _projectTreeView.Project = project;
         }
 
 	    string _currentFileName;

@@ -76,12 +76,12 @@
         </ToolBar>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition MinWidth="200" Width="250" />
+                <ColumnDefinition MinWidth="200" Width="350" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition MinWidth="200" Width="*" />
             </Grid.ColumnDefinitions>
             <DockPanel Grid.Column="0" HorizontalAlignment="Stretch" Margin="0">
-                <userControls:ProjectTreeView />
+                <userControls:ProjectTreeView x:Name="_projectTreeView" />
             </DockPanel>
             <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Left" />
             <avalonEdit:TextEditor

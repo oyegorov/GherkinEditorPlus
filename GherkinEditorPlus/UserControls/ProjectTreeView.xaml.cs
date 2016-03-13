@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using GherkinEditorPlus.Model;
 
 namespace GherkinEditorPlus.UserControls
 {
@@ -24,5 +25,13 @@ namespace GherkinEditorPlus.UserControls
         {
             InitializeComponent();
         }
+        
+        public Project Project
+        {
+            get { return (Project)GetValue(ProjectProperty); }
+            set { SetValue(ProjectProperty, value); }
+        }
+
+        public static readonly DependencyProperty ProjectProperty = DependencyProperty.Register("Project", typeof(Project), typeof(ProjectTreeView), new PropertyMetadata(null));
     }
 }
