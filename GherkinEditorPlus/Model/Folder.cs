@@ -5,6 +5,10 @@ namespace GherkinEditorPlus.Model
 {
     public class Folder
     {
+        public Folder(string name):this(name, new List<Feature>(), new List<Folder>())
+        {
+        }
+
         public Folder(string name, IEnumerable<Feature> features, IEnumerable<Folder> folders)
         {
             Features = new ObservableCollection<Feature>(features);

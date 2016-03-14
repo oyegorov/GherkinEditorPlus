@@ -5,6 +5,10 @@ namespace GherkinEditorPlus.Model
 {
     public class Feature
     {
+        public Feature(string name, string file) : this(name, new List<Scenario>(), file)
+        {
+        }
+
         public Feature(string name, IEnumerable<Scenario> scenarios, string file)
         {
             Scenarios = new ObservableCollection<Scenario>(scenarios);

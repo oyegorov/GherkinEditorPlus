@@ -40,7 +40,7 @@ namespace GherkinEditorPlus
 
             var includedFeatures = includedStaticFiles.Where(f => f.EndsWith(".feature", StringComparison.OrdinalIgnoreCase));
 
-            List<FolderInternal> rootFoldersInternal = new List<FolderInternal>();
+            List<Folder> rootFolders = new List<Folder>();
 
             foreach (string includedFeature in includedFeatures)
             {
@@ -48,56 +48,48 @@ namespace GherkinEditorPlus
 
                 string featureName = parts[parts.Length - 1];
 
-                FolderInternal currentFolder = null;
+                Folder currentFolder = null;
 
                 foreach (string featureFolder in parts.Take(parts.Length - 1))
                 {
                     if (currentFolder == null)
                     {
-                        currentFolder = rootFoldersInternal.SingleOrDefault(f => f.Name == featureFolder);
+                        currentFolder = rootFolders.SingleOrDefault(f => f.Name == featureFolder);
                         if (currentFolder == null)
                         {
-                            currentFolder = new FolderInternal() {Name = featureFolder};
-                            rootFoldersInternal.Add(currentFolder);
+                            currentFolder = new Folder(featureFolder);
+                            rootFolders.Add(currentFolder);
                         }
                         continue;
                     }
 
-                    FolderInternal child = currentFolder.Folders.SingleOrDefault(f => f.Name == featureFolder);
+                    Folder child = currentFolder.Folders.SingleOrDefault(f => f.Name == featureFolder);
 
                     if (child == null)
                     {
-                        child = new FolderInternal() { Name = featureFolder };
+                        child = new Folder(featureFolder);
                         currentFolder.Folders.Add(child);
+                        currentFolder = child;
+                    }
+                    else
+                    {
                         currentFolder = child;
                     }
                 }
 
                 string fileName = Path.Combine(new FileInfo(projectFilePath).Directory.FullName, includedFeature);
 
-                currentFolder.Features.Add(new FeatureInternal() {Name = featureName, FileName = fileName });
+                currentFolder.Features.Add(CreateFeatureFromInternal(featureName, fileName));
             }
 
-            var rootFolders = rootFoldersInternal.Select(CreateFolderFromInternal);
-
-            return new Project(new FileInfo(projectFilePath).Name, new Feature[0], rootFolders);
+            return new Project(new FileInfo(projectFilePath).Name, new List<Feature>(), rootFolders);
         }
 
-        private static Folder CreateFolderFromInternal(FolderInternal folderInternal)
+        private static Feature CreateFeatureFromInternal(string name, string file)
         {
-            Folder folder = new Folder(
-                folderInternal.Name,
-                folderInternal.Features.Select(CreateFeatureFromInternal),
-                folderInternal.Folders.Select(CreateFolderFromInternal));
+            var feature = new Feature(name, new List<Scenario>(), file);
 
-            return folder;
-        }
-
-        private static Feature CreateFeatureFromInternal(FeatureInternal featureInternal)
-        {
-            var feature = new Feature(featureInternal.Name, new List<Scenario>(), featureInternal.FileName);
-
-            string[] featureLines = File.ReadAllLines(featureInternal.FileName);
+            string[] featureLines = File.ReadAllLines(file);
 
             Scenario currentScenario = null;
             Background backgroundScenario = null;
@@ -110,6 +102,7 @@ namespace GherkinEditorPlus
                 {
                     isBackground = true;
                     backgroundScenario = new Background();
+                    feature.Scenarios.Add(backgroundScenario);
                     continue;
                 }
 

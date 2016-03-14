@@ -41,6 +41,8 @@ namespace ICSharpCode.AvalonEdit.CodeCompletion
 			if (InsertionRequested != null)
 				InsertionRequested(this, e);
 		}
+
+	    public int FilterLength { get; set; }
 		
 		CompletionListBox listBox;
 		

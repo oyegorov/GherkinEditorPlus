@@ -34,6 +34,9 @@ namespace GherkinEditorPlus
 
             Project project = ProjectLoader.LoadProject(@"..\..\SampleProject\Bdd.PublicApiTests.csproj");
 	        _projectTreeView.Project = project;
+            
+            Application.Current.Properties["Project"] = project;
+
             CloseEditedFeatureCommand = new DelegateCommand(CloseEditedFeature);
 	    }
 

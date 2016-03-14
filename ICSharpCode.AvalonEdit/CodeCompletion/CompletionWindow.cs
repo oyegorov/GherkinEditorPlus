@@ -23,7 +23,7 @@ namespace ICSharpCode.AvalonEdit.CodeCompletion
 	/// </summary>
 	public class CompletionWindow : CompletionWindowBase
 	{
-		readonly CompletionList completionList = new CompletionList();
+		public readonly CompletionList completionList = new CompletionList();
 		ToolTip toolTip = new ToolTip();
 		
 		/// <summary>
@@ -35,7 +35,7 @@ namespace ICSharpCode.AvalonEdit.CodeCompletion
             this.TextArea.Document.Remove(this.TextArea.Caret.Offset-1,1);
             this.CloseAutomatically = true;
 			this.SizeToContent = SizeToContent.Height;
-			this.Width = 175;
+			this.Width = 375;
 			this.Content = completionList;
 			// prevent user from resizing window to 0x0
 			this.MinHeight = 15;
@@ -77,9 +77,18 @@ namespace ICSharpCode.AvalonEdit.CodeCompletion
 		
 		void completionList_InsertionRequested(object sender, EventArgs e)
 		{
+            this.TextArea.RemoveSelectedText();
+
 			var item = completionList.SelectedItem;
 			if (item != null)
-				item.Complete(this.TextArea, new AnchorSegment(this.TextArea.Document, this.StartOffset, this.EndOffset - this.StartOffset), e);
+            {
+                var offset = TextArea.Document.GetOffset(TextArea.Caret.Line, TextArea.Caret.Column);
+
+                this.TextArea.Selection = new SimpleSelection(offset - completionList.FilterLength, offset);
+                this.TextArea.RemoveSelectedText();
+
+                item.Complete(this.TextArea, new AnchorSegment(this.TextArea.Document, this.StartOffset, this.EndOffset - this.StartOffset), e);
+            }
 			Close();
 		}
 		

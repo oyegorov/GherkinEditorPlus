@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using System.Xml;
 using GherkinEditorPlus.Model;
+using GherkinEditorPlus.Utils;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Highlighting;
@@ -17,8 +20,13 @@ namespace GherkinEditorPlus.UserControls
     /// </summary>
     public partial class DocumentEditor : UserControl
     {
+        private string[] stepKeywords = new[] { "When ", "Then ", "And ", "Given " };
+        private string[] finalKeywords = { "Scenario: ", "Scenario Outline: ", "Background: " };
+
         private CompletionWindow _completionWindow;
         private readonly Languages _languages;
+
+        private readonly string[] _steps;
 
         public DocumentEditor()
         {
@@ -53,6 +61,10 @@ namespace GherkinEditorPlus.UserControls
             foldingUpdateTimer.Start();
             _languages = new Languages();
             _completionDataLoader = new CompletionDataLoader();
+
+            Project project = (Project) Application.Current.Properties["Project"];
+
+            _steps = project.GetAllSteps().Select(s => s.Text).ToArray();
         }
 
         public Feature Feature
@@ -81,6 +93,12 @@ namespace GherkinEditorPlus.UserControls
         {
             if (prevKey == Key.LeftCtrl && e.Key == Key.Space)
             {
+                if (_completionWindow != null)
+                {
+                    e.Handled = true;
+                    return;
+                }
+
                 prevKey = null;
                 showAutoComplete = true;
             }
@@ -98,6 +116,26 @@ namespace GherkinEditorPlus.UserControls
             {
                 DisplayAutoComplete();
             }
+
+            if (_completionWindow != null)
+            {
+                var data = _completionWindow.CompletionList.CompletionData;
+
+                var filter = GetCurrentFilter();
+
+                if (!filter.FilteredItems.Any())
+                {
+                    _completionWindow.Close();
+                    _completionWindow = null;
+                }
+                else
+                {
+                    data.Clear();
+
+                    filter.FilteredItems.ForEach(w => data.Add(new GherkinCompletionItem(w)));
+                }
+            }
+
             showAutoComplete = false;
         }
 
@@ -106,18 +144,54 @@ namespace GherkinEditorPlus.UserControls
             _completionWindow = new CompletionWindow(textEditor.TextArea);
             var data = _completionWindow.CompletionList.CompletionData;
 
-            if (textEditor.TextArea.Caret.Line == 1 && HasLanguageLine())
-            {
-                _completionDataLoader.LoadLanguages(data, _languages);
-            }
-            else
-            {
-                var language = GetLanguageToLoad();
-                _completionDataLoader.LoadDataInto(data, language);
-            }
+            var filter = GetCurrentFilter();
+            filter.FilteredItems.ForEach(w => data.Add(new GherkinCompletionItem(w)));
 
             _completionWindow.Show();
             _completionWindow.Closed += delegate { _completionWindow = null; };
+        }
+
+        private Filter GetCurrentFilter()
+        {
+            int column = textEditor.TextArea.Caret.Column;
+            var offset = textEditor.Document.GetOffset(textEditor.TextArea.Caret.Line, 0);
+            string filter = textEditor.Document.GetText(offset, column).TrimStart();
+
+            string[] keywords;
+
+            if (finalKeywords.Any(k => filter.StartsWith(k, StringComparison.InvariantCultureIgnoreCase)))
+            {
+                keywords = new string[0];
+            }
+            else 
+            {
+                bool startsWithGherkinVerb = false;
+
+                foreach (string gherkinKeyword in stepKeywords)
+                {
+                    if (filter.StartsWith(gherkinKeyword, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        filter = filter.Remove(0, gherkinKeyword.Length);
+                        startsWithGherkinVerb = true;
+                    }
+                }
+
+                if (startsWithGherkinVerb)
+                    keywords = _steps;
+                else
+                    keywords = stepKeywords.Union(finalKeywords).ToArray();
+            }
+
+            if (_completionWindow != null)
+                _completionWindow.completionList.FilterLength = filter.Length;
+
+            var filteredItems =
+                keywords.Where(
+                    w =>
+                        w.IndexOf(filter, StringComparison.InvariantCultureIgnoreCase) != -1
+                        && filter.Length != w.Length).ToList();
+
+            return new Filter {FilterText = filter, FilteredItems = filteredItems};
         }
 
         private bool HasLanguageLine()
@@ -155,10 +229,16 @@ namespace GherkinEditorPlus.UserControls
         void Text_editor_text_area_text_entering(object sender, TextCompositionEventArgs e)
         {
             if (e.Text.Length <= 0 || _completionWindow == null) return;
-            if (!char.IsLetterOrDigit(e.Text[0]))
+            if (!char.IsLetterOrDigit(e.Text[0]) && e.Text[0] != 32)
             {
                 _completionWindow.CompletionList.RequestInsertion(e);
             }
+        }
+
+        private class Filter
+        {
+            public string FilterText { get; set; }
+            public List<string> FilteredItems { get; set; } 
         }
 
         #region Folding
