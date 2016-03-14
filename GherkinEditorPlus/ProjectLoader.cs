@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using GherkinEditorPlus.Model;
@@ -13,7 +14,14 @@ namespace GherkinEditorPlus
         private const string IncludedStaticFileXPath = "//*[local-name()='None']";
         private const string IncludeAttributeName = "Include";
         private const string Separators = @"(Given\s|When\s|Then\s|And\s)";
+        private const string ScenarioRegexTemplate = @"(Scenario:\s|Scenario Outline:\s)(?<scenario_name>.*)";
         private const string ValueToken = "'%value%'";
+        private const string BackGroundTemplate = "Background:";
+        
+        private static readonly Regex QuotesRegex = new Regex("'[^']*'", RegexOptions.IgnoreCase);
+        private static readonly Regex BackgroundRegex = new Regex(BackGroundTemplate, RegexOptions.Compiled);
+        private static readonly Regex ScenarioExtractorRegex = new Regex(ScenarioRegexTemplate, RegexOptions.Compiled);
+        private static readonly Regex FeatureStepExtractorRegex = new Regex(Separators + @"\s*(?<stepInstance>.*[^\s])?\s*", RegexOptions.Compiled);
 
         public static Project LoadProject(string projectFilePath)
         {
@@ -91,16 +99,98 @@ namespace GherkinEditorPlus
 
             string[] featureLines = File.ReadAllLines(featureInternal.FileName);
 
-            Scenario currentScenario;
+            Scenario currentScenario = null;
+            Background backgroundScenario = null;
+
+            bool isBackground = false;
 
             foreach (string featureLine in featureLines)
             {
-                
+                if (BackgroundRegex.IsMatch(featureLine))
+                {
+                    isBackground = true;
+                    backgroundScenario = new Background();
+                    continue;
+                }
+
+                string scenarioName;
+
+                if (TryParseAsScenario(featureLine, out scenarioName))
+                {
+                    isBackground = false;
+
+                    currentScenario = new Scenario(scenarioName);
+                    feature.Scenarios.Add(currentScenario);
+                    
+                    continue;
+                };
+
+                string stepText;
+
+                if (TryParseAsStep(featureLine, out stepText))
+                {
+                    Step step = new Step(stepText);
+
+                    if (isBackground)
+                    {
+                        backgroundScenario.Steps.Add(step);
+                        continue;
+                    }
+
+                    //Warning...Someone decided that feature description should also be written in terms of And, When, etc...
+                    if (currentScenario == null)
+                    {
+                        continue;
+                        //throw new InvalidOperationException($"Unable to process a step without a correspoding scenario. Step Text = '{stepText}'");
+                    }
+
+                    currentScenario.Steps.Add(step);
+                };
             }
 
-
-
             return feature;
+        }
+
+        private static bool TryParseAsScenario(string featureLine, out string scenarioName)
+        {
+            scenarioName = null;
+
+            var matches = ScenarioExtractorRegex.Matches(featureLine);
+
+            foreach (Match match in matches)
+            {
+                if (!match.Success)
+                {
+                    return false;
+                }
+
+                scenarioName = match.Groups["scenario_name"].Value;
+                return true;
+            }
+
+            return false;
+        }
+
+        private static bool TryParseAsStep(string featureLine, out string stepText)
+        {
+            stepText = null;
+
+            var matches = FeatureStepExtractorRegex.Matches(featureLine);
+
+            foreach (Match match in matches)
+            {
+                if (!match.Success)
+                {
+                    return false;
+                }
+
+                stepText = match.Groups["stepInstance"].Value;
+                stepText = QuotesRegex.Replace(stepText, ValueToken);
+
+                return true;
+            }
+
+            return false;
         }
 
         private class FolderInternal

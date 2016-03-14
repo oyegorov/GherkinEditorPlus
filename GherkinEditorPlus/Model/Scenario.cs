@@ -5,11 +5,17 @@ namespace GherkinEditorPlus.Model
 {
     public class Scenario
     {
-        public Scenario(IEnumerable<Step> steps)
+        public Scenario(string name): this(name, new List<Step>())
         {
+        }
+
+        public Scenario(string name, IEnumerable<Step> steps)
+        {
+            Name = name;
             Steps = new ObservableCollection<Step>(steps);
         }
 
-        public ObservableCollection<Step> Steps { get; private set; }
+        public string Name { get; set; }
+        public ObservableCollection<Step> Steps { get; set; }
     }
 }

@@ -105,6 +105,7 @@
     <Compile Include="GherkinCompletionItem.cs" />
     <Compile Include="Language.cs" />
     <Compile Include="Languages.cs" />
+    <Compile Include="Model\Background.cs" />
     <Compile Include="Model\Feature.cs" />
     <Compile Include="Model\Folder.cs" />
     <Compile Include="Model\Project.cs" />
