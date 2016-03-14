@@ -91,62 +91,51 @@ namespace GherkinEditorPlus.UserControls
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
-            if (prevKey == Key.LeftCtrl && e.Key == Key.Space)
-            {
-                if (_completionWindow != null)
-                {
-                    e.Handled = true;
-                    return;
-                }
-
-                prevKey = null;
-                showAutoComplete = true;
-            }
-            else
-            {
+//            if (prevKey == Key.LeftCtrl && e.Key == Key.Space)
+//            {
+//                if (_completionWindow != null)
+//                {
+//                    e.Handled = true;
+//                    return;
+//                }
+//
+//                prevKey = null;
+//                showAutoComplete = true;
+//            }
+//            else
+//            {
                 prevKey = e.Key;
-                showAutoComplete = false;
+//                showAutoComplete = false;
                 base.OnKeyDown(e);
-            }
+//            }
         }
 
         void Text_editor_text_area_text_entered(object sender, TextCompositionEventArgs e)
         {
-            if (showAutoComplete)
+            var filter = GetCurrentFilter();
+
+            if (!filter.FilteredItems.Any() && _completionWindow != null)
             {
+                _completionWindow.Close();
+                return;
+            }
+
+            if (_completionWindow == null)
                 DisplayAutoComplete();
-            }
 
-            if (_completionWindow != null)
-            {
-                var data = _completionWindow.CompletionList.CompletionData;
+            var data = _completionWindow.CompletionList.CompletionData;
 
-                var filter = GetCurrentFilter();
+            data.Clear();
 
-                if (!filter.FilteredItems.Any())
-                {
-                    _completionWindow.Close();
-                    _completionWindow = null;
-                }
-                else
-                {
-                    data.Clear();
+            filter.FilteredItems.ForEach(w => data.Add(new GherkinCompletionItem(w)));
 
-                    filter.FilteredItems.ForEach(w => data.Add(new GherkinCompletionItem(w)));
-                }
-            }
-
-            showAutoComplete = false;
+            _completionWindow.Show();
         }
 
         private void DisplayAutoComplete()
         {
             _completionWindow = new CompletionWindow(textEditor.TextArea);
-            var data = _completionWindow.CompletionList.CompletionData;
-
-            var filter = GetCurrentFilter();
-            filter.FilteredItems.ForEach(w => data.Add(new GherkinCompletionItem(w)));
-
+            
             _completionWindow.Show();
             _completionWindow.Closed += delegate { _completionWindow = null; };
         }
