@@ -12,7 +12,8 @@
 				Name="textEditor"
 				FontFamily="Consolas"
 				FontSize="10pt" Grid.Column="2"
-                Padding="10">
+                Padding="10"
+                ShowLineNumbers="True">
         </avalonedit:TextEditor>
     </Grid>
 </UserControl>

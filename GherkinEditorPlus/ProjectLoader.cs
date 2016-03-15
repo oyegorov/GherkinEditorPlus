@@ -88,6 +88,7 @@ namespace GherkinEditorPlus
         private static Feature CreateFeatureFromInternal(string name, string file)
         {
             var feature = new Feature(name, new List<Scenario>(), file);
+            feature.Text = File.ReadAllText(file);
 
             string[] featureLines = File.ReadAllLines(file);
 

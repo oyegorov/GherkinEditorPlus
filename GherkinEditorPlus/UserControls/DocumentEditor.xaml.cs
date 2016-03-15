@@ -55,6 +55,7 @@ namespace GherkinEditorPlus.UserControls
 
             textEditor.TextArea.TextEntering += Text_editor_text_area_text_entering;
             textEditor.TextArea.TextEntered += Text_editor_text_area_text_entered;
+            textEditor.TextChanged += TextEditor_TextChanged;
 
             var foldingUpdateTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
             foldingUpdateTimer.Tick += Folding_update_timer_tick;
@@ -65,6 +66,12 @@ namespace GherkinEditorPlus.UserControls
             Project project = (Project) Application.Current.Properties["Project"];
 
             _steps = project.GetAllSteps().Select(s => s.Text).ToArray();
+        }
+
+        private void TextEditor_TextChanged(object sender, EventArgs e)
+        {
+            Feature.Modified = true;
+            Feature.Text = textEditor.Text;
         }
 
         public Feature Feature
@@ -80,7 +87,10 @@ namespace GherkinEditorPlus.UserControls
 
             var feature = e.NewValue as Feature;
             if (feature != null)
+            {
                 self.LoadDocument(feature.File);
+                feature.Modified = false;
+            }
         }
 
         public void LoadDocument(string documentPath)

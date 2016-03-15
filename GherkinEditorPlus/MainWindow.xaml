@@ -4,6 +4,7 @@
 	xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
     xmlns:forms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
     xmlns:userControls="clr-namespace:GherkinEditorPlus.UserControls"
+    xmlns:gherkinEditorPlus="clr-namespace:GherkinEditorPlus"
     Title="Gherkin Editor Plus" WindowStartupLocation="CenterScreen"
     Icon="Images/gherkin.png"
     x:Name="_self"
@@ -19,42 +20,16 @@
                     </Style.Triggers>
                 </Style>
             </ToolBar.Resources>
-            <Button>
+            <Button Command="{Binding ElementName=_self, Path=OpenCommand}" ToolTip="Opens a project">
                 <Image Source="Images/Open.png" Height="16"/>
             </Button>
-            <Button>
+            <Button Command="{Binding ElementName=_self, Path=SaveCommand}" ToolTip="Saves the current feature file">
                 <Image Source="Images/Save.png" Height="16"/>
             </Button>
-            <Separator/>
-            <Button Command="Cut">
-                <Image Source="Images/Cut.png" Height="16"/>
-            </Button>
-            <Button Command="Copy">
-                <Image Source="Images/Copy.png" Height="16"/>
-            </Button>
-            <Button Command="Paste">
-                <Image Source="Images/Paste.png" Height="16"/>
-            </Button>
-            <Button Command="Delete">
-                <Image Source="Images/Delete.png" Height="16"/>
+            <Button Command="{Binding ElementName=_self, Path=SaveAllCommand}" ToolTip="Saves all open features">
+                <Image Source="Images/Save_all.png" Height="16"/>
             </Button>
             <Separator/>
-            <Button Command="Undo">
-                <Image Source="Images/Undo.png" Height="16"/>
-            </Button>
-            <Button Command="Redo">
-                <Image Source="Images/Redo.png" Height="16"/>
-            </Button>
-            <Separator/>
-            <CheckBox IsChecked="{Binding ElementName=textEditor,Path=WordWrap}">
-                <Image Source="Images/WordWrap.png" Height="16"/>
-            </CheckBox>
-            <CheckBox IsChecked="{Binding ElementName=textEditor,Path=ShowLineNumbers}">
-                <TextBlock Width="16" TextAlignment="Center">#</TextBlock>
-            </CheckBox>
-            <CheckBox IsChecked="{Binding ElementName=textEditor,Path=Options.ShowEndOfLine}">
-                <TextBlock Width="16" TextAlignment="Center">¶</TextBlock>
-            </CheckBox>
         </ToolBar>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -67,7 +42,10 @@
             </DockPanel>
             <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Left" />
 
-            <TabControl Grid.Column="2" ItemsSource="{Binding ElementName=_self, Path=EditedFeatures}" SelectedItem="{Binding ElementName=_self, Path=ActiveFeature, Mode=TwoWay}">
+            <TabControl Grid.Column="2" ItemsSource="{Binding ElementName=_self, Path=EditedFeatures}" SelectedItem="{Binding ElementName=_self, Path=ActiveFeature, Mode=TwoWay}" x:Name="_tabControl">
+                <TabControl.Resources>
+                    <gherkinEditorPlus:TabTitleConverter x:Key="TabTitleConverter"/>
+                </TabControl.Resources>
                 <TabControl.ContentTemplate>
                     <DataTemplate>
                         <userControls:DocumentEditor Feature="{Binding}"></userControls:DocumentEditor>
@@ -77,7 +55,14 @@
                 <TabControl.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock Text="{Binding Name}" />
+                            <TextBlock>
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{StaticResource TabTitleConverter}">
+                                        <Binding Path="Name" />
+                                        <Binding Path="Modified" />
+                                    </MultiBinding>
+                                </TextBlock.Text>    
+                            </TextBlock>
                             <Button Background="Transparent" BorderThickness="0" Margin="5,0,0,0" Command="{Binding ElementName=_self, Path=CloseEditedFeatureCommand}" CommandParameter="{Binding}">
                                 <Image Source="Images/close_tab.png" Width="12" Height="12" />
                             </Button>
