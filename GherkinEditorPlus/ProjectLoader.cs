@@ -94,11 +94,28 @@ namespace GherkinEditorPlus
 
             Scenario currentScenario = null;
             Background backgroundScenario = null;
+            Step lastStep = null;
 
             bool isBackground = false;
 
+            bool processingTable = false;
+            
             foreach (string featureLine in featureLines)
             {
+                string[] columns = null;
+                if (TryParseAsTable(featureLine, out columns))
+                {
+                    if (!processingTable)
+                    {
+                        lastStep.TableHeaders = columns;
+                        processingTable = true;
+                    }
+
+                    continue;
+                }
+
+                processingTable = false;
+
                 if (BackgroundRegex.IsMatch(featureLine))
                 {
                     isBackground = true;
@@ -124,6 +141,7 @@ namespace GherkinEditorPlus
                 if (TryParseAsStep(featureLine, out stepText))
                 {
                     Step step = new Step(stepText);
+                    lastStep = step;
 
                     if (isBackground)
                     {
@@ -139,10 +157,33 @@ namespace GherkinEditorPlus
                     }
 
                     currentScenario.Steps.Add(step);
+
+                    continue;
                 };
+
+              
             }
 
             return feature;
+        }
+
+        public static bool TryParseAsTable(string featureLine, out string[] columns)
+        {
+            columns = null;
+
+            string trimmedFeatureLine = featureLine.Trim();
+
+            if (trimmedFeatureLine.StartsWith("|") && trimmedFeatureLine.EndsWith("|"))
+            {
+                columns =
+                    trimmedFeatureLine.Split(new[] {"|"}, StringSplitOptions.RemoveEmptyEntries).
+                        Select(v => v.Trim()).
+                        ToArray();
+
+                return true;
+            }
+
+            return false;
         }
 
         private static bool TryParseAsScenario(string featureLine, out string scenarioName)

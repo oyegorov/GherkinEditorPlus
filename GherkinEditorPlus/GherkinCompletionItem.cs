@@ -58,8 +58,15 @@ namespace GherkinEditorPlus
 		}
 
 	    public void Complete(TextArea textArea, ISegment completionSegment, EventArgs insertionRequestEventArgs)
-		{
-			textArea.Document.Replace(completionSegment, Text);
+	    {
+	        string textToInsert;
+
+	        if (_description is string)
+	            textToInsert = Text + Environment.NewLine + _description;
+	        else
+	            textToInsert = Text;
+
+	        textArea.Document.Replace(completionSegment, textToInsert);
 		}
 	}
 }

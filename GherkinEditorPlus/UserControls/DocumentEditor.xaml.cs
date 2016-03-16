@@ -26,7 +26,7 @@ namespace GherkinEditorPlus.UserControls
         private CompletionWindow _completionWindow;
         private readonly Languages _languages;
 
-        private readonly string[] _steps;
+        private readonly Step[] _steps;
 
         public DocumentEditor()
         {
@@ -65,7 +65,7 @@ namespace GherkinEditorPlus.UserControls
 
             Project project = (Project) Application.Current.Properties["Project"];
 
-            _steps = project.GetAllSteps().Select(s => s.Text).ToArray();
+            _steps = project.GetAllSteps().ToArray();
         }
 
         private void TextEditor_TextChanged(object sender, EventArgs e)
@@ -142,7 +142,7 @@ namespace GherkinEditorPlus.UserControls
                 {
                     data.Clear();
 
-                    filter.FilteredItems.ForEach(w => data.Add(new GherkinCompletionItem(w)));
+                    filter.FilteredItems.ForEach(w => data.Add(new GherkinCompletionItem(w.Text, w.Description)));
                 }
             }
 
@@ -155,7 +155,7 @@ namespace GherkinEditorPlus.UserControls
             var data = _completionWindow.CompletionList.CompletionData;
 
             var filter = GetCurrentFilter();
-            filter.FilteredItems.ForEach(w => data.Add(new GherkinCompletionItem(w)));
+            filter.FilteredItems.ForEach(w => data.Add(new GherkinCompletionItem(w.Text, w.Description)));
 
             _completionWindow.Show();
             _completionWindow.Closed += delegate { _completionWindow = null; };
@@ -167,29 +167,29 @@ namespace GherkinEditorPlus.UserControls
             var offset = textEditor.Document.GetOffset(textEditor.TextArea.Caret.Line, 0);
             string filter = textEditor.Document.GetText(offset, column).TrimStart();
 
-            string[] keywords;
+            CompleionItem[] keywords;
 
             if (finalKeywords.Any(k => filter.StartsWith(k, StringComparison.InvariantCultureIgnoreCase)))
             {
-                keywords = new string[0];
+                keywords = new CompleionItem[0];
             }
             else 
             {
-                bool startsWithGherkinVerb = false;
+                bool startsWithStepKeyword = false;
 
                 foreach (string gherkinKeyword in stepKeywords)
                 {
                     if (filter.StartsWith(gherkinKeyword, StringComparison.InvariantCultureIgnoreCase))
                     {
                         filter = filter.Remove(0, gherkinKeyword.Length);
-                        startsWithGherkinVerb = true;
+                        startsWithStepKeyword = true;
                     }
                 }
 
-                if (startsWithGherkinVerb)
-                    keywords = _steps;
+                if (startsWithStepKeyword)
+                    keywords = _steps.Select(s => new CompleionItem {Text = s.Text, Description = s.AsTable()}).ToArray();
                 else
-                    keywords = stepKeywords.Union(finalKeywords).ToArray();
+                    keywords = stepKeywords.Union(finalKeywords).Select(k => new CompleionItem {Text = k}).ToArray();
             }
 
             if (_completionWindow != null)
@@ -198,8 +198,8 @@ namespace GherkinEditorPlus.UserControls
             var filteredItems =
                 keywords.Where(
                     w =>
-                        w.IndexOf(filter, StringComparison.InvariantCultureIgnoreCase) != -1
-                        && filter.Length != w.Length).ToList();
+                        w.Text.IndexOf(filter, StringComparison.InvariantCultureIgnoreCase) != -1
+                        && filter.Length != w.Text.Length).ToList();
 
             return new Filter {FilterText = filter, FilteredItems = filteredItems};
         }
@@ -248,7 +248,13 @@ namespace GherkinEditorPlus.UserControls
         private class Filter
         {
             public string FilterText { get; set; }
-            public List<string> FilteredItems { get; set; } 
+            public List<CompleionItem> FilteredItems { get; set; } 
+        }
+
+        private class CompleionItem
+        {
+            public string Text { get; set; }
+            public string Description { get; set; }
         }
 
         #region Folding
