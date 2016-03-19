@@ -159,6 +159,7 @@
     </Compile>
     <Compile Include="Utils\Extensions.cs" />
     <Compile Include="Utils\DelegateCommand.cs" />
+    <Compile Include="Utils\TableFormatter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="UserControls\DocumentEditor.xaml">
