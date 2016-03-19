@@ -1,9 +1,11 @@
 1. TFS integration support
    a. GET LATEST
-   b. Automatic checkout when edit
-   c. Checkin with JIRA item and comment
+   b. Automatic checkout when edit (use EXCLUSIVE checkout for now, later on we'll work on graceful conflict resolution)
+   c. Checkin with mandatory TFS fields
    d. undo checkout
-   e. link to history (http://taipan:8080/tfs/SOTITFS/_git/AndroidMC#path=%2F.m2%2Fsettings.xml&_a=history)
+   e. when you ADD or REMOVE a file, make sure the project is automatically checkout and immediately checked back in (ask for JIRA item)
+   f. when you close a file with pending changes (or close the application) automatically checkin
+   g. link to history (http://taipan:8080/tfs/SOTITFS/_git/AndroidMC#path=%2F.m2%2Fsettings.xml&_a=history)
 2. Autogeneration of .cs content (and check-out/checkin/undocheckout of the file in the same operation of 1.a, 1.b, 1.c, 1.d)
 3. Adding support for steps that have tables.
 	a. Insert table header when autocompleting a steps

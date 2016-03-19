@@ -1,7 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
+using TechTalk.SpecFlow.Generator;
+using TechTalk.SpecFlow.Generator.Interfaces;
 
 namespace GherkinEditorPlus.Model
 {
@@ -20,11 +24,13 @@ namespace GherkinEditorPlus.Model
             Name = name;
         }
 
-        public string Name { get; private set; }
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public string Name { get; }
 
         public ObservableCollection<Scenario> Scenarios { get; private set; }
 
-        public string File { get; private set; }
+        public string File { get; }
 
         public bool Modified
         {
@@ -45,8 +51,27 @@ namespace GherkinEditorPlus.Model
         {
             return $"Feature Name: '{Name}'";
         }
+        
+        public string GetCodeBehind(string codeNamespace)
+        {
+            if (codeNamespace == null)
+                throw new ArgumentNullException(nameof(codeNamespace));
 
-        public event PropertyChangedEventHandler PropertyChanged;
+            var factory = new TestGeneratorFactory();
+            var generator = factory.CreateGenerator(new ProjectSettings
+            {
+                ProjectFolder = Path.GetDirectoryName(File)
+            });
+
+            var featureInput = new FeatureFileInput(Path.GetFileName(File))
+            {
+                CustomNamespace = codeNamespace,
+                FeatureFileContent = Text,
+            };
+
+            var generatedTestFile = generator.GenerateTestFile(featureInput, new GenerationSettings());
+            return generatedTestFile.Success ? generatedTestFile.GeneratedTestCode : String.Empty;
+        }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

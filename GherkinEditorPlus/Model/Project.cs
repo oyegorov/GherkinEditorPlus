@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using GherkinEditorPlus.Utils;
 
@@ -6,9 +7,20 @@ namespace GherkinEditorPlus.Model
 {
     public class Project : Folder
     {
-        public Project(string name, IEnumerable<Feature> features, IEnumerable<Folder> folders):base(name, features, folders)
+        public Project(string name, string defaultNamespace, string file, IEnumerable<Feature> features, IEnumerable<Folder> folders) : base(name, features, folders)
         {
+            if (defaultNamespace == null)
+                throw new ArgumentNullException(nameof(defaultNamespace));
+            if (file == null)
+                throw new ArgumentNullException(nameof(file));
+
+            File = file;
+            DefaultNamespace = defaultNamespace;
         }
+
+        public string File { get; }
+
+        public string DefaultNamespace { get; }
 
         public Step[] GetAllSteps()
         {

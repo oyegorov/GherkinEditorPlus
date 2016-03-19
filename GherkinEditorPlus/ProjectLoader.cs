@@ -12,6 +12,7 @@ namespace GherkinEditorPlus
     public static class ProjectLoader
     {
         private const string IncludedStaticFileXPath = "//*[local-name()='None']";
+        private const string DefaultNamespaceXPath = "//*[local-name()='RootNamespace']";
         private const string IncludeAttributeName = "Include";
         private const string Separators = @"(Given\s|When\s|Then\s|And\s)";
         private const string ScenarioRegexTemplate = @"(Scenario:\s|Scenario Outline:\s)(?<scenario_name>.*)";
@@ -37,6 +38,8 @@ namespace GherkinEditorPlus
                 csprojDocument.XPathSelectElements(IncludedStaticFileXPath)
                     .Where(e => e.Attribute(IncludeAttributeName) != null)
                     .Select(e => e.Attribute(IncludeAttributeName).Value);
+
+            string defaultNamespace = csprojDocument.XPathSelectElement(DefaultNamespaceXPath).Value;
 
             var includedFeatures = includedStaticFiles.Where(f => f.EndsWith(".feature", StringComparison.OrdinalIgnoreCase));
 
@@ -82,7 +85,7 @@ namespace GherkinEditorPlus
                 currentFolder.Features.Add(CreateFeatureFromInternal(featureName, fileName));
             }
 
-            return new Project(new FileInfo(projectFilePath).Name, new List<Feature>(), rootFolders);
+            return new Project(new FileInfo(projectFilePath).Name, defaultNamespace, Path.GetFullPath(projectFilePath), new List<Feature>(), rootFolders);
         }
 
         private static Feature CreateFeatureFromInternal(string name, string file)

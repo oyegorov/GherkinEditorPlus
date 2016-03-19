@@ -49,18 +49,14 @@ namespace GherkinEditorPlus
 	    {
 	        foreach (var editedFeature in EditedFeatures)
 	        {
-                File.WriteAllText(editedFeature.File, editedFeature.Text);
-                editedFeature.Modified = false;
+                SaveFeature(editedFeature);
             }
 	    }
 
 	    private void Save(object obj)
 	    {
-	        if (ActiveFeature != null)
-	        {
-                File.WriteAllText(ActiveFeature.File, ActiveFeature.Text);
-	            ActiveFeature.Modified = false;
-	        }
+            if (ActiveFeature != null)
+	            SaveFeature(ActiveFeature);
 	    }
 
 	    private void Open(object obj)
@@ -102,6 +98,31 @@ namespace GherkinEditorPlus
             Project project = ProjectLoader.LoadProject(fileName);
             _projectTreeView.Project = project;
             Application.Current.Properties["Project"] = project;
+        }
+
+	    private void SaveFeature(Feature feature)
+	    {
+	        var currentProject = (Project)Application.Current.Properties["Project"];
+            
+	        string codeBehindFileName = feature.File + ".cs";
+
+	        string folderNamespace = String.Empty;
+	        string featureFolder = Path.GetDirectoryName(feature.File);
+	        string projectFolder = Path.GetDirectoryName(currentProject.File);
+
+	        if (!String.Equals(featureFolder, projectFolder) && featureFolder.StartsWith(projectFolder, StringComparison.OrdinalIgnoreCase))
+	        {
+	            folderNamespace = featureFolder.Substring(projectFolder.Length).Replace("\\", ".");
+	        }
+
+	        string codeBehindNamespace = currentProject.DefaultNamespace + folderNamespace;
+
+	        string codeBehind = feature.GetCodeBehind(codeBehindNamespace);
+
+            File.WriteAllText(feature.File, feature.Text);
+            File.WriteAllText(codeBehindFileName, codeBehind);
+
+            feature.Modified = false;
         }
     }
 }
