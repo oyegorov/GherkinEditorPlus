@@ -8,6 +8,7 @@
     Title="Gherkin Editor Plus" WindowStartupLocation="CenterScreen"
     Icon="Images/gherkin.png"
     x:Name="_self"
+    Closing="WindowClosing"
 	>
     <DockPanel>
         <ToolBar DockPanel.Dock="Top">

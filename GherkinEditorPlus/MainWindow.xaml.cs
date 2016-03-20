@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -80,7 +81,7 @@ namespace GherkinEditorPlus
         {
             var featureToClose = (Feature) o;
 
-            if (featureToClose.Modified && MessageBox.Show($"Feature '{featureToClose.Name}' was changed. Continue?", "Gherkin Editor Plus", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            if (!featureToClose.Modified || MessageBox.Show($"Your changes will be lost. Close window?", "Gherkin Editor Plus", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 int newActiveFeatureIndex = Math.Max(EditedFeatures.IndexOf(featureToClose) - 1, 0);
 
@@ -124,5 +125,14 @@ namespace GherkinEditorPlus
 
             feature.Modified = false;
         }
-    }
+
+	    private void WindowClosing(object sender, CancelEventArgs e)
+	    {
+	        if (EditedFeatures.Any(f => f.Modified))
+	        {
+	            if (MessageBox.Show("There are unsaved files. All your changes will be lost. \r\nContinue?", "Gherkin Editor Plus", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
+	                e.Cancel = true;
+	        }
+	    }
+	}
 }
