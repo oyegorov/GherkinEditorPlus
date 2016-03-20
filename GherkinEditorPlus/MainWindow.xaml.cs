@@ -9,6 +9,8 @@ using System.Windows.Input;
 using GherkinEditorPlus.Model;
 using GherkinEditorPlus.UserControls;
 using GherkinEditorPlus.Utils;
+using log4net;
+using log4net.Config;
 using Microsoft.Win32;
 
 namespace GherkinEditorPlus
@@ -35,7 +37,7 @@ namespace GherkinEditorPlus
         public static readonly DependencyProperty ActiveFeatureProperty = DependencyProperty.Register("ActiveFeature", typeof(Feature), typeof(MainWindow), new PropertyMetadata(null));
 
         public MainWindow()
-	    {
+        {
             CloseEditedFeatureCommand = new DelegateCommand(CloseEditedFeature);
             OpenCommand = new DelegateCommand(Open);
             SaveCommand = new DelegateCommand(Save);
@@ -43,8 +45,10 @@ namespace GherkinEditorPlus
 
             InitializeComponent();
 
+            Logger.Instance.Info("Application started.");
+
             LoadProject(@"..\..\SampleProject\Bdd.PublicApiTests.csproj");
-	    }
+        }
 
 	    private void SaveAll(object obj)
 	    {

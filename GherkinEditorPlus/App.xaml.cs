@@ -21,6 +21,8 @@ using System.Windows;
 using System.Data;
 using System.Xml;
 using System.Configuration;
+using GherkinEditorPlus.Utils;
+using log4net;
 
 namespace GherkinEditorPlus
 {
@@ -32,6 +34,13 @@ namespace GherkinEditorPlus
 		public App()
 		{
 			InitializeComponent();
+
+            log4net.Config.XmlConfigurator.Configure();
+
+		    Dispatcher.UnhandledException += (sender, args) =>
+		        {
+		            Logger.Instance.Fatal("Application crashed.", args.Exception);
+		        };
 		}
 	}
 }

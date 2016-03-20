@@ -75,6 +75,9 @@
     <Reference Include="IKVM.Runtime">
       <HintPath>..\libs\SpecFlow\IKVM.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\libs\log4net\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
@@ -159,6 +162,7 @@
     </Compile>
     <Compile Include="Utils\Extensions.cs" />
     <Compile Include="Utils\DelegateCommand.cs" />
+    <Compile Include="Utils\Logger.cs" />
     <Compile Include="Utils\TableFormatter.cs" />
   </ItemGroup>
   <ItemGroup>
