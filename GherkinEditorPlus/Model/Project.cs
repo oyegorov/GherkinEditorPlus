@@ -34,7 +34,25 @@ namespace GherkinEditorPlus.Model
                     .Union(
                         Folders.SelectMany(fo => fo.Features).SelectMany(fe => fe.Scenarios).SelectMany(fe => fe.Steps))
                     .DistinctBy(s => s.Text)
+                    .OrderBy(s => s.Text)
                     .ToArray();
+        }
+
+        public string[] GetAllFiles()
+        {
+            return Folders.SelectMany(
+                f =>
+                    f.Folders.SelectMany(fo => fo.Features)
+                        .Union(Folders.SelectMany(fo => fo.Features)).Select(fe => fe.File))
+                .ToArray();
+        }
+
+        public Feature GetFeatureByFile(string fullPath)
+        {
+            return Folders.SelectMany(
+                f =>
+                    f.Folders.SelectMany(fo => fo.Features)
+                        .Union(Folders.SelectMany(fo => fo.Features))).SingleOrDefault(f => f.File == fullPath);
         }
 
         public override string ToString()

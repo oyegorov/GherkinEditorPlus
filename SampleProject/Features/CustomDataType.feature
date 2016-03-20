@@ -21,3 +21,4 @@ When I make a call to pulic API to update a custom data type with request proper
     | DataType.Name          | DataType.DeviceFamily | DeviceFamily | DataType.PhysicalType | DataType.Expression                      | DataType.Description |
     | CustomTypeName2.{guid} | AndroidPlus           | AndroidPlus  | String                | INI://Test 2.txt?SC=Section 1&NM=Value 2 | Description 2        |
 Then The custom data type is updated with properties as specified
+asdfasdfsdfsaf

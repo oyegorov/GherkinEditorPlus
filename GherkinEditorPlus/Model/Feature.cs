@@ -12,16 +12,14 @@ namespace GherkinEditorPlus.Model
     public class Feature : INotifyPropertyChanged
     {
         private bool _modified;
+        private bool _isReadOnly;
 
-        public Feature(string name, string file) : this(name, new List<Scenario>(), file)
-        {
-        }
-
-        public Feature(string name, IEnumerable<Scenario> scenarios, string file)
+        public Feature(string name, IEnumerable<Scenario> scenarios, string file, bool isReadyOnly)
         {
             Scenarios = new ObservableCollection<Scenario>(scenarios);
             File = file;
             Name = name;
+            IsReadOnly = isReadyOnly;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -41,6 +39,19 @@ namespace GherkinEditorPlus.Model
             set
             {
                 _modified = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsReadOnly
+        {
+            get
+            {
+                return _isReadOnly;
+            }
+            set
+            {
+                _isReadOnly = value;
                 OnPropertyChanged();
             }
         }

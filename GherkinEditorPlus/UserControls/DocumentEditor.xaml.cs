@@ -12,7 +12,6 @@ using GherkinEditorPlus.Model;
 using GherkinEditorPlus.Utils;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Highlighting;
 
@@ -104,7 +103,11 @@ namespace GherkinEditorPlus.UserControls
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
-            if (prevKey == Key.LeftCtrl && e.Key == Key.Space)
+            if (prevKey == Key.LeftCtrl && e.Key == Key.F)
+            {
+                ProcessTableFormatting(true);
+            }
+            else if (prevKey == Key.LeftCtrl && e.Key == Key.Space)
             {
                 if (_completionWindow != null)
                 {
@@ -127,7 +130,7 @@ namespace GherkinEditorPlus.UserControls
         {
             if (e.Text == "|")
             {
-                ProcessTableFormatting();
+                ProcessTableFormatting(false);
             }
 
             if (showAutoComplete)
@@ -172,8 +175,8 @@ namespace GherkinEditorPlus.UserControls
         private Filter GetCurrentFilter()
         {
             int column = textEditor.TextArea.Caret.Column;
-            var offset = textEditor.Document.GetOffset(textEditor.TextArea.Caret.Line, 0);
-            string filter = textEditor.Document.GetText(offset, column).TrimStart();
+            var offset = textEditor.Document.GetOffset(textEditor.TextArea.Caret.Line, 1);
+            string filter = textEditor.Document.GetText(offset, column - 1).TrimStart();
 
             CompleionItem[] keywords;
 
@@ -253,14 +256,14 @@ namespace GherkinEditorPlus.UserControls
             }
         }
 
-        private bool ProcessTableFormatting()
+        private bool ProcessTableFormatting(bool keyFormatting)
         {
             int column = textEditor.TextArea.Caret.Column;
 
             int currentLineNumber = textEditor.TextArea.Caret.Line;
             var currentLine = textEditor.Document.GetLineByNumber(currentLineNumber);
 
-            if (currentLine.Length == column - 1)
+            if (currentLine.Length == column - 1 || keyFormatting)
             {
                 string lineText = textEditor.Document.GetText(currentLine);
 
