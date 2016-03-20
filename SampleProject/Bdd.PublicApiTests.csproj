@@ -131,6 +131,16 @@
     <Compile Include="..\ResourcesManager.cs">
       <Link>Properties\ResourcesManager.cs</Link>
     </Compile>
+    <Compile Include="dd.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dd.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\36471f58-e75a-4151-bb09-ee88a0a7f601.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>36471f58-e75a-4151-bb09-ee88a0a7f601.feature</DependentUpon>
+    </Compile>
     <Compile Include="Features\AndroidWork\BooleanDeviceFeatureControlPayloads.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -166,10 +176,21 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DeviceConfigurationManagement.feature</DependentUpon>
     </Compile>
+    <Compile Include="Features\e5cc127a-8666-4bb2-8cb5-17d788749c22.feature.cs" />
+    <Compile Include="Features\gavno\test.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>test.feature</DependentUpon>
+    </Compile>
     <Compile Include="Features\PublicAPI\AppleVolumePurchaseProgram\AssignAppleVppLicenseMultiple.feature.cs">
       <DependentUpon>AssignAppleVppLicenseMultiple.feature</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Features\zlo.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>zlo.feature</DependentUpon>
     </Compile>
     <Compile Include="Steps\CreateRuleStepsAndroid.cs" />
     <Compile Include="Steps\DeviceConfigurationManagementSteps.cs" />
@@ -457,6 +478,11 @@
     </Compile>
     <Compile Include="Utils\TableUtils.cs" />
     <Compile Include="Utils\PollingHelper.cs" />
+    <Compile Include="zlo.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>zlo.feature</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Database.config">
@@ -465,6 +491,14 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="App.config" />
+    <None Include="dd.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>dd.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\36471f58-e75a-4151-bb09-ee88a0a7f601.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>36471f58-e75a-4151-bb09-ee88a0a7f601.feature.cs</LastGenOutput>
+    </None>
     <None Include="Features\AddPackageInProfile.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>AddPackageInProfile.feature.cs</LastGenOutput>
@@ -501,6 +535,10 @@
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>DeviceConfigurationManagement.feature.cs</LastGenOutput>
     </None>
+    <None Include="Features\e5cc127a-8666-4bb2-8cb5-17d788749c22.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>e5cc127a-8666-4bb2-8cb5-17d788749c22.feature.cs</LastGenOutput>
+    </None>
     <None Include="Features\EnrollAfWDevice.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>EnrollAfWDevice.feature.cs</LastGenOutput>
@@ -508,6 +546,10 @@
     <None Include="Features\DeviceNote.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>DeviceNote.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\gavno\test.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>test.feature.cs</LastGenOutput>
     </None>
     <None Include="Features\PackageSummary.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
@@ -641,9 +683,17 @@
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>WipeDevice.feature.cs</LastGenOutput>
     </None>
+    <None Include="Features\zlo.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>zlo.feature.cs</LastGenOutput>
+    </None>
     <None Include="Soti.MobiControl.Bdd.PublicApiTests.snk" />
     <None Include="test.pfx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="zlo.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>zlo.feature.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>

@@ -43,8 +43,8 @@ namespace GherkinEditorPlus
 
             var includedFeatures = includedStaticFiles.Where(f => f.EndsWith(".feature", StringComparison.OrdinalIgnoreCase));
 
-            List<Folder> rootFolders = new List<Folder>();
-
+            var project = new Project(new FileInfo(projectFilePath).Name, defaultNamespace, Path.GetFullPath(projectFilePath), new List<Feature>(), new List<Folder>());
+            
             foreach (string includedFeature in includedFeatures)
             {
                 string[] parts = includedFeature.Split(new[] {@"\"}, StringSplitOptions.RemoveEmptyEntries);
@@ -57,12 +57,12 @@ namespace GherkinEditorPlus
                 {
                     if (currentFolder == null)
                     {
-                        currentFolder = rootFolders.SingleOrDefault(f => f.Name == featureFolder);
+                        currentFolder = project.Folders.SingleOrDefault(f => f.Name == featureFolder);
                         if (currentFolder == null)
                         {
                             currentFolder = new Folder(featureFolder);
                             currentFolder.Path = Path.Combine(Path.GetDirectoryName(projectFilePath), featureFolder);
-                            rootFolders.Add(currentFolder);
+                            project.Folders.Add(currentFolder);
                         }
                         continue;
                     }
@@ -84,10 +84,11 @@ namespace GherkinEditorPlus
 
                 string fileName = Path.Combine(new FileInfo(projectFilePath).Directory.FullName, includedFeature);
 
-                currentFolder.Features.Add(CreateFeatureFromInternal(featureName, fileName));
+                var folderToAddFeature = currentFolder ?? project;
+                folderToAddFeature.Features.Add(CreateFeatureFromInternal(featureName, fileName));
             }
 
-            return new Project(new FileInfo(projectFilePath).Name, defaultNamespace, Path.GetFullPath(projectFilePath), new List<Feature>(), rootFolders);
+            return project;
         }
 
         public static void AddFeature(Project project, Folder parentFolder, string featureName)
@@ -100,7 +101,9 @@ namespace GherkinEditorPlus
                 throw new ArgumentNullException(nameof(featureName));
 
             string folderPath = Path.GetFullPath(parentFolder.Path);
-            string folderRelativePath = folderPath.Substring(Path.GetFullPath(Path.GetDirectoryName(project.File)).Length + 1);
+            string projectFolderPath = Path.GetFullPath(Path.GetDirectoryName(project.File));
+
+            string folderRelativePath = String.Equals(folderPath, projectFolderPath, StringComparison.OrdinalIgnoreCase) ? String.Empty : folderPath.Substring(projectFolderPath.Length + 1);
 
             string featureFileName = Path.Combine(folderPath, $"{featureName}.feature");
             string featureCodeBehindFileName = Path.Combine(folderPath, $"{featureName}.feature.cs");
@@ -108,12 +111,37 @@ namespace GherkinEditorPlus
             File.WriteAllText(featureCodeBehindFileName, String.Empty);
 
             var projectData = new Microsoft.Build.Evaluation.Project(project.File);
-            projectData.AddItem("Compile", System.IO.Path.Combine(folderRelativePath, $"{featureName}.feature.cs"));
-            projectData.AddItem("None", System.IO.Path.Combine(folderRelativePath, $"{featureName}.feature"));
+            var addedFeatureFileItem = projectData.AddItem("None", System.IO.Path.Combine(folderRelativePath, $"{featureName}.feature")).First();
+            addedFeatureFileItem.SetMetadataValue("Generator", "SpecFlowSingleFileGenerator");
+            addedFeatureFileItem.SetMetadataValue("LastGenOutput", $"{featureName}.feature.cs");
+
+            var addedFeatureCodeBehindFileItem = projectData.AddItem("Compile", System.IO.Path.Combine(folderRelativePath, $"{featureName}.feature.cs")).First();
+            addedFeatureCodeBehindFileItem.SetMetadataValue("AutoGen", "True");
+            addedFeatureCodeBehindFileItem.SetMetadataValue("DesignTime", "True");
+            addedFeatureCodeBehindFileItem.SetMetadataValue("DependentUpon", $"{featureName}.feature");
+            
             projectData.Save();
 
             var feature = CreateFeatureFromInternal(featureName, featureFileName);
             parentFolder.Features.Add(feature);
+        }
+
+        public static void AddFolder(Folder parentFolder, string folderName)
+        {
+            if (parentFolder == null)
+                throw new ArgumentNullException(nameof(parentFolder));
+            if (folderName == null)
+                throw new ArgumentNullException(nameof(folderName));
+
+            string folderPath = Path.Combine(Path.GetFullPath(parentFolder.Path), folderName);
+
+            if (!Directory.Exists(folderPath))
+                Directory.CreateDirectory(folderPath);
+
+            parentFolder.Folders.Add(new Folder(folderName)
+            {
+                Path = folderPath
+            });
         }
 
         private static Feature CreateFeatureFromInternal(string name, string file)
