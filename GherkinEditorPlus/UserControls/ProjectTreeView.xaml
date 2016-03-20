@@ -44,8 +44,8 @@
                 <HierarchicalDataTemplate DataType="{x:Type model:Folder}">
                     <HierarchicalDataTemplate.ItemsSource>
                         <MultiBinding Converter="{StaticResource ProjectItemsConverter}">
-                            <Binding Path="Features" />
-                            <Binding Path="Folders" />
+                            <Binding Path="Features" UpdateSourceTrigger="PropertyChanged" NotifyOnSourceUpdated="True" BindsDirectlyToSource="True"/>
+                            <Binding Path="Folders" UpdateSourceTrigger="PropertyChanged" NotifyOnSourceUpdated="True" BindsDirectlyToSource="True" />
                         </MultiBinding>
                     </HierarchicalDataTemplate.ItemsSource>
                     

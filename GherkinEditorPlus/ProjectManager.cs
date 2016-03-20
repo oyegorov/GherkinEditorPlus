@@ -9,7 +9,7 @@ using GherkinEditorPlus.Model;
 
 namespace GherkinEditorPlus
 {
-    public static class ProjectLoader
+    public static class ProjectManager
     {
         private const string IncludedStaticFileXPath = "//*[local-name()='None']";
         private const string DefaultNamespaceXPath = "//*[local-name()='RootNamespace']";
@@ -61,6 +61,7 @@ namespace GherkinEditorPlus
                         if (currentFolder == null)
                         {
                             currentFolder = new Folder(featureFolder);
+                            currentFolder.Path = Path.Combine(Path.GetDirectoryName(projectFilePath), featureFolder);
                             rootFolders.Add(currentFolder);
                         }
                         continue;
@@ -71,6 +72,7 @@ namespace GherkinEditorPlus
                     if (child == null)
                     {
                         child = new Folder(featureFolder);
+                        child.Path = Path.Combine(currentFolder.Path, featureFolder);
                         currentFolder.Folders.Add(child);
                         currentFolder = child;
                     }
@@ -86,6 +88,32 @@ namespace GherkinEditorPlus
             }
 
             return new Project(new FileInfo(projectFilePath).Name, defaultNamespace, Path.GetFullPath(projectFilePath), new List<Feature>(), rootFolders);
+        }
+
+        public static void AddFeature(Project project, Folder parentFolder, string featureName)
+        {
+            if (project == null)
+                throw new ArgumentNullException(nameof(project));
+            if (parentFolder == null)
+                throw new ArgumentNullException(nameof(parentFolder));
+            if (featureName == null)
+                throw new ArgumentNullException(nameof(featureName));
+
+            string folderPath = Path.GetFullPath(parentFolder.Path);
+            string folderRelativePath = folderPath.Substring(Path.GetFullPath(Path.GetDirectoryName(project.File)).Length + 1);
+
+            string featureFileName = Path.Combine(folderPath, $"{featureName}.feature");
+            string featureCodeBehindFileName = Path.Combine(folderPath, $"{featureName}.feature.cs");
+            File.WriteAllText(featureFileName, String.Empty);
+            File.WriteAllText(featureCodeBehindFileName, String.Empty);
+
+            var projectData = new Microsoft.Build.Evaluation.Project(project.File);
+            projectData.AddItem("Compile", System.IO.Path.Combine(folderRelativePath, $"{featureName}.feature.cs"));
+            projectData.AddItem("None", System.IO.Path.Combine(folderRelativePath, $"{featureName}.feature"));
+            projectData.Save();
+
+            var feature = CreateFeatureFromInternal(featureName, featureFileName);
+            parentFolder.Features.Add(feature);
         }
 
         private static Feature CreateFeatureFromInternal(string name, string file)
