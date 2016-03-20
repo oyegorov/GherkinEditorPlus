@@ -31,11 +31,11 @@ namespace GherkinEditorPlus.Utils
 
             foreach (string line in lines)
             {
-                string[] values = line.Trim().Split(new[] { VerticalBar }, StringSplitOptions.RemoveEmptyEntries).Select(v => v.Trim()).ToArray();
+                string[] values = line.Trim().Split(new[] { VerticalBar }, StringSplitOptions.None).Select(v => v.Trim()).ToArray();
 
                 TableRow tableRow = new TableRow();
 
-                for (int i = 0; i < values.Length; i++)
+                for (int i = 1; i < values.Length-1; i++)
                     tableRow.Add(i, values[i]);
 
                 tableRows.Add(tableRow);

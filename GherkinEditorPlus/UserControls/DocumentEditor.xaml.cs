@@ -349,11 +349,7 @@ namespace GherkinEditorPlus.UserControls
                     {
                         var offset = textEditor.Document.GetOffset(startingLineNumber, 1);
 
-                        //textEditor.Document.Insert(offset, pretty);
-
                         textEditor.Document.Replace(offset, tableLines.Sum(tl => tl.Length) + tableLines.Count * 2 - 2, pretty);
-
-//                        textEditor.Select(offset, tableLines.Last().Offset - tableLines.First().Offset);
 
                         return true;
                     }
