@@ -16,6 +16,7 @@ namespace GherkinEditorPlus.Model
 
             File = file;
             DefaultNamespace = defaultNamespace;
+            Path = System.IO.Path.GetDirectoryName(File);
         }
 
         public string File { get; }

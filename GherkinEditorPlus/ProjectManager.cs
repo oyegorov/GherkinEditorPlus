@@ -7,7 +7,6 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using GherkinEditorPlus.Model;
 using GherkinEditorPlus.Utils;
-using sun.security.provider;
 
 namespace GherkinEditorPlus
 {
@@ -26,8 +25,8 @@ namespace GherkinEditorPlus
         private static readonly Regex ScenarioExtractorRegex = new Regex(ScenarioRegexTemplate, RegexOptions.Compiled);
         private static readonly Regex FeatureStepExtractorRegex = new Regex(Separators + @"\s*(?<stepInstance>.*[^\s])?\s*", RegexOptions.Compiled);
 
-        private static FileSystemWatcher _fileSystemWatcher;
         private static Project _currentProject;
+        private static FileSystemWatcher _fileSystemWatcher;
 
         public static Project LoadProject(string projectFilePath)
         {
@@ -48,8 +47,8 @@ namespace GherkinEditorPlus
 
             var includedFeatures = includedStaticFiles.Where(f => f.EndsWith(".feature", StringComparison.OrdinalIgnoreCase));
 
-            List<Folder> rootFolders = new List<Folder>();
-
+            _currentProject = new Project(new FileInfo(projectFilePath).Name, defaultNamespace, Path.GetFullPath(projectFilePath), new List<Feature>(), new List<Folder>());
+            
             foreach (string includedFeature in includedFeatures)
             {
                 string[] parts = includedFeature.Split(new[] {@"\"}, StringSplitOptions.RemoveEmptyEntries);
@@ -62,12 +61,12 @@ namespace GherkinEditorPlus
                 {
                     if (currentFolder == null)
                     {
-                        currentFolder = rootFolders.SingleOrDefault(f => f.Name == featureFolder);
+                        currentFolder = _currentProject.Folders.SingleOrDefault(f => f.Name == featureFolder);
                         if (currentFolder == null)
                         {
                             currentFolder = new Folder(featureFolder);
                             currentFolder.Path = Path.Combine(Path.GetDirectoryName(projectFilePath), featureFolder);
-                            rootFolders.Add(currentFolder);
+                            _currentProject.Folders.Add(currentFolder);
                         }
                         continue;
                     }
@@ -89,11 +88,10 @@ namespace GherkinEditorPlus
 
                 string fileName = Path.Combine(new FileInfo(projectFilePath).Directory.FullName, includedFeature);
 
-                currentFolder.Features.Add(CreateFeatureFromInternal(featureName, fileName));
+                var folderToAddFeature = currentFolder ?? _currentProject;
+                folderToAddFeature.Features.Add(CreateFeatureFromInternal(featureName, fileName));
             }
 
-            _currentProject = new Project(new FileInfo(projectFilePath).Name, defaultNamespace, Path.GetFullPath(projectFilePath), new List<Feature>(), rootFolders);
-           
             string directory = new FileInfo(projectFilePath).Directory.FullName;
 
             _fileSystemWatcher = new FileSystemWatcher(directory);
@@ -107,31 +105,6 @@ namespace GherkinEditorPlus
             return _currentProject;
         }
 
-        private static void FileAttributesChanged(object sender, FileSystemEventArgs e)
-        {
-            string file = e.FullPath;
-
-            if (!file.EndsWith(".feature.cs") && !file.EndsWith(".feature"))
-                return;
-
-            if (file.EndsWith(".feature.cs"))
-            {
-                file = file.Replace(".feature.cs", ".feature");
-            }
-
-            bool isReadOnly = new FileInfo(file).IsReadOnly || new FileInfo(file + ".cs").IsReadOnly;
-
-            Feature feature = _currentProject.GetFeatureByFile(file);
-
-            if (feature == null)
-            {
-                Logger.Instance.Error($"Unable to find a feature by file name '{e.FullPath}'.");
-                return;
-            }
-
-            feature.IsReadOnly = isReadOnly;
-        }
-
         public static void AddFeature(Project project, Folder parentFolder, string featureName)
         {
             if (project == null)
@@ -142,7 +115,9 @@ namespace GherkinEditorPlus
                 throw new ArgumentNullException(nameof(featureName));
 
             string folderPath = Path.GetFullPath(parentFolder.Path);
-            string folderRelativePath = folderPath.Substring(Path.GetFullPath(Path.GetDirectoryName(project.File)).Length + 1);
+            string projectFolderPath = Path.GetFullPath(Path.GetDirectoryName(project.File));
+
+            string folderRelativePath = String.Equals(folderPath, projectFolderPath, StringComparison.OrdinalIgnoreCase) ? String.Empty : folderPath.Substring(projectFolderPath.Length + 1);
 
             string featureFileName = Path.Combine(folderPath, $"{featureName}.feature");
             string featureCodeBehindFileName = Path.Combine(folderPath, $"{featureName}.feature.cs");
@@ -150,19 +125,44 @@ namespace GherkinEditorPlus
             File.WriteAllText(featureCodeBehindFileName, String.Empty);
 
             var projectData = new Microsoft.Build.Evaluation.Project(project.File);
-            projectData.AddItem("Compile", System.IO.Path.Combine(folderRelativePath, $"{featureName}.feature.cs"));
-            projectData.AddItem("None", System.IO.Path.Combine(folderRelativePath, $"{featureName}.feature"));
+            var addedFeatureFileItem = projectData.AddItem("None", System.IO.Path.Combine(folderRelativePath, $"{featureName}.feature")).First();
+            addedFeatureFileItem.SetMetadataValue("Generator", "SpecFlowSingleFileGenerator");
+            addedFeatureFileItem.SetMetadataValue("LastGenOutput", $"{featureName}.feature.cs");
+
+            var addedFeatureCodeBehindFileItem = projectData.AddItem("Compile", System.IO.Path.Combine(folderRelativePath, $"{featureName}.feature.cs")).First();
+            addedFeatureCodeBehindFileItem.SetMetadataValue("AutoGen", "True");
+            addedFeatureCodeBehindFileItem.SetMetadataValue("DesignTime", "True");
+            addedFeatureCodeBehindFileItem.SetMetadataValue("DependentUpon", $"{featureName}.feature");
+            
             projectData.Save();
 
             var feature = CreateFeatureFromInternal(featureName, featureFileName);
             parentFolder.Features.Add(feature);
         }
 
+        public static void AddFolder(Folder parentFolder, string folderName)
+        {
+            if (parentFolder == null)
+                throw new ArgumentNullException(nameof(parentFolder));
+            if (folderName == null)
+                throw new ArgumentNullException(nameof(folderName));
+
+            string folderPath = Path.Combine(Path.GetFullPath(parentFolder.Path), folderName);
+
+            if (!Directory.Exists(folderPath))
+                Directory.CreateDirectory(folderPath);
+
+            parentFolder.Folders.Add(new Folder(folderName)
+            {
+                Path = folderPath
+            });
+        }
+
         private static Feature CreateFeatureFromInternal(string name, string file)
         {
-            string csFile = file + ".cs";
+            bool isReadOnly = new FileInfo(file).IsReadOnly || new FileInfo(file + ".cs").IsReadOnly;
 
-            var feature = new Feature(name, new List<Scenario>(), file, new FileInfo(file).IsReadOnly || new FileInfo(csFile).IsReadOnly);
+            var feature = new Feature(name, new List<Scenario>(), file, isReadOnly);
             feature.Text = File.ReadAllText(file);
 
             string[] featureLines = File.ReadAllLines(file);
@@ -301,6 +301,31 @@ namespace GherkinEditorPlus
             }
 
             return false;
+        }
+
+        private static void FileAttributesChanged(object sender, FileSystemEventArgs e)
+        {
+            string file = e.FullPath;
+
+            if (!file.EndsWith(".feature.cs") && !file.EndsWith(".feature"))
+                return;
+
+            if (file.EndsWith(".feature.cs"))
+            {
+                file = file.Replace(".feature.cs", ".feature");
+            }
+
+            bool isReadOnly = new FileInfo(file).IsReadOnly || new FileInfo(file + ".cs").IsReadOnly;
+
+            Feature feature = _currentProject.GetFeatureByFile(file);
+
+            if (feature == null)
+            {
+                Logger.Instance.Error($"Unable to find a feature by file name '{e.FullPath}'.");
+                return;
+            }
+
+            feature.IsReadOnly = isReadOnly;
         }
 
         private class FolderInternal

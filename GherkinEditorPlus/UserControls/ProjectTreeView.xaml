@@ -8,12 +8,13 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300" x:Name="_self">
     <Grid>
+ 
         <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
+            <!--<RowDefinition Height="30"/>-->
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         
-        <TextBox Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" Margin="2" BorderBrush="Gainsboro">
+        <!--<TextBox Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" Margin="2" BorderBrush="Gainsboro">
             <TextBox.Style>
                 <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
                     <Style.Resources>
@@ -36,8 +37,8 @@
                     </Style.Triggers>
                 </Style>
             </TextBox.Style>
-        </TextBox>
-        <TreeView Grid.Row="1" Margin="2" BorderBrush="Gainsboro" ItemsSource="{Binding Path=Project.Folders, ElementName=_self}">
+        </TextBox>-->
+        <TreeView Grid.Row="1" Margin="2" BorderBrush="Gainsboro" ItemsSource="{Binding Path=Project.Folders, ElementName=_self}" PreviewMouseRightButtonDown="OnPreviewMouseRightButtonDown" x:Name="_treeView">
             <TreeView.Resources>
                 <local:ProjectItemsConverter x:Key="ProjectItemsConverter"/>
 
@@ -64,4 +65,12 @@
             </TreeView.Resources>
         </TreeView>
     </Grid>
+    <UserControl.ContextMenu>
+        <ContextMenu DataContext="{Binding RelativeSource={RelativeSource Mode=Self}, Path=PlacementTarget}">
+            <ContextMenu.Items>
+                <MenuItem Header="New folder" Command="{Binding Path=AddFolderCommand}"></MenuItem>
+                <MenuItem Header="New feature" Command="{Binding Path=AddFeatureCommand}"></MenuItem>
+            </ContextMenu.Items>
+        </ContextMenu>
+    </UserControl.ContextMenu>
 </UserControl>
