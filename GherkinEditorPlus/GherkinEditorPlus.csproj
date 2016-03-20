@@ -75,6 +75,10 @@
     <Reference Include="IKVM.Runtime">
       <HintPath>..\libs\SpecFlow\IKVM.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\log4net\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Build" />
     <Reference Include="Microsoft.Build.Engine" />
     <Reference Include="PresentationCore">
@@ -164,6 +168,7 @@
     </Compile>
     <Compile Include="Utils\Extensions.cs" />
     <Compile Include="Utils\DelegateCommand.cs" />
+    <Compile Include="Utils\Logger.cs" />
     <Compile Include="Utils\TableFormatter.cs" />
   </ItemGroup>
   <ItemGroup>
