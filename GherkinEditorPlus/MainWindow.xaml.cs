@@ -100,15 +100,15 @@ namespace GherkinEditorPlus
 	    {
             EditedFeatures.Clear();
 
-            Project project = ProjectLoader.LoadProject(fileName);
+            Project project = ProjectManager.LoadProject(fileName);
             _projectTreeView.Project = project;
             Application.Current.Properties["Project"] = project;
         }
 
 	    private void SaveFeature(Feature feature)
 	    {
-	        var currentProject = (Project)Application.Current.Properties["Project"];
-            
+            var currentProject = (Project)Application.Current.Properties["Project"];
+
 	        string codeBehindFileName = feature.File + ".cs";
 
 	        string folderNamespace = String.Empty;
