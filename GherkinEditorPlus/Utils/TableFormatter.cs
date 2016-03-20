@@ -9,8 +9,10 @@ namespace GherkinEditorPlus.Utils
     {
         private const char VerticalBar = '|';
 
-        public static string PrettyPrint(string tableString)
+        public static bool TryPrettyPrint(string tableString, out string prettyTable)
         {
+            prettyTable = null;
+
             string[] lines = tableString.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
 
             int firstBarIndex = lines[0].IndexOf(VerticalBar.ToString(), StringComparison.InvariantCultureIgnoreCase);
@@ -18,12 +20,12 @@ namespace GherkinEditorPlus.Utils
             string headerOffset = lines[0].Substring(0, firstBarIndex);
 
             if (headerOffset.Any(c => !char.IsWhiteSpace(c)))
-                return tableString;
+                return false;
 
             int numberOfbars = CalculateBarCount(lines[0]);
 
             if (lines.Any(l => CalculateBarCount(l) != numberOfbars))
-                return tableString;
+                return false;
 
             List<TableRow> tableRows = new List<TableRow>();
 
@@ -67,7 +69,8 @@ namespace GherkinEditorPlus.Utils
                     result.AppendLine();
             }
 
-            return result.ToString();
+            prettyTable = result.ToString();
+            return true;
         }
 
         private static int CalculateBarCount(string line)

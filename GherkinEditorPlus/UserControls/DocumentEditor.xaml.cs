@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -10,6 +11,8 @@ using System.Xml;
 using GherkinEditorPlus.Model;
 using GherkinEditorPlus.Utils;
 using ICSharpCode.AvalonEdit.CodeCompletion;
+using ICSharpCode.AvalonEdit.Document;
+using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Highlighting;
 
@@ -101,6 +104,15 @@ namespace GherkinEditorPlus.UserControls
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
+            if (prevKey == Key.LeftShift && e.Key == Key.Oem5)
+            {
+                if (ProcessTableFormatting())
+                {
+                    e.Handled = true;
+                    return;
+                }
+            }
+
             if (prevKey == Key.LeftCtrl && e.Key == Key.Space)
             {
                 if (_completionWindow != null)
@@ -245,6 +257,112 @@ namespace GherkinEditorPlus.UserControls
             }
         }
 
+        private bool ProcessTableFormatting()
+        {
+            int column = textEditor.TextArea.Caret.Column;
+
+            int currentLineNumber = textEditor.TextArea.Caret.Line;
+            var currentLine = textEditor.Document.GetLineByNumber(currentLineNumber);
+
+            if (currentLine.Length == column - 1)
+            {
+                string lineText = textEditor.Document.GetText(currentLine);
+                lineText += "|";
+
+                if (lineText.Trim().StartsWith("|") && lineText.Trim().EndsWith("|"))
+                {
+                    int startingLineNumber = currentLineNumber;
+
+                    StringBuilder table = new StringBuilder();
+
+                    Stack<string> previousLines = new Stack<string>();
+                    Queue<string> queue = new Queue<string>();
+
+                    int activeLineNumber = currentLineNumber;
+                    var activeLine = textEditor.Document.GetLineByNumber(activeLineNumber);
+                    var activeLineText = textEditor.Document.GetText(activeLine);
+
+                    List<DocumentLine> tableLines = new List<DocumentLine>();
+
+                    tableLines.Add(currentLine);
+
+                    while (activeLineNumber > 0)
+                    {
+                        activeLineNumber--;
+
+                        activeLine = textEditor.Document.GetLineByNumber(activeLineNumber);
+
+                        activeLineText = textEditor.Document.GetText(activeLine);
+
+                        if (activeLineText.Trim().StartsWith("|") && activeLineText.TrimEnd().EndsWith("|"))
+                        {
+                            tableLines.Add(activeLine);
+
+                            previousLines.Push(activeLineText);
+                            startingLineNumber = activeLineNumber;
+                            continue;
+                        }
+
+                        break;
+                    }
+
+                    activeLineNumber = currentLineNumber;
+
+                    while (true)
+                    {
+                        activeLineNumber++;
+
+                        if (activeLineNumber > textEditor.Document.LineCount)
+                            break;
+
+                        activeLine = textEditor.Document.GetLineByNumber(activeLineNumber);
+
+                        activeLineText = textEditor.Document.GetText(activeLine);
+
+                        if (activeLineText.Trim().StartsWith("|") && activeLineText.TrimEnd().EndsWith("|"))
+                        {
+                            tableLines.Add(activeLine);
+
+                            queue.Enqueue(activeLineText);
+                            continue;
+                        }
+
+                        break;
+                    }
+
+                    while (previousLines.Count > 0)
+                    {
+                        table.AppendLine(previousLines.Pop());
+                    }
+                    
+                    table.AppendLine(lineText);
+
+                    foreach (var nextLine in queue)
+                    {
+                        table.AppendLine(nextLine);
+                    }
+
+                    string pretty;
+                    string ugly = table.ToString();
+                    
+                    if (TableFormatter.TryPrettyPrint(ugly, out pretty))
+                    {
+                        var offset = textEditor.Document.GetOffset(startingLineNumber, 1);
+
+                        //textEditor.Document.Insert(offset, pretty);
+
+                        textEditor.Document.Replace(offset, tableLines.Sum(tl => tl.Length) + tableLines.Count * 2 - 2, pretty);
+
+//                        textEditor.Select(offset, tableLines.Last().Offset - tableLines.First().Offset);
+
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
         private class Filter
         {
             public string FilterText { get; set; }
@@ -258,10 +376,15 @@ namespace GherkinEditorPlus.UserControls
         }
 
         #region Folding
+
         FoldingManager foldingManager;
+
         AbstractFoldingStrategy foldingStrategy;
+
         private Key? prevKey;
+
         private bool showAutoComplete;
+
         private readonly CompletionDataLoader _completionDataLoader;
 
         void Folding_update_timer_tick(object sender, EventArgs e)
@@ -271,6 +394,7 @@ namespace GherkinEditorPlus.UserControls
                 foldingStrategy.UpdateFoldings(foldingManager, textEditor.Document);
             }
         }
+
         #endregion
     }
 }
