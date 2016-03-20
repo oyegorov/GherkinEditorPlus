@@ -104,15 +104,6 @@ namespace GherkinEditorPlus.UserControls
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
-            if (prevKey == Key.LeftShift && e.Key == Key.Oem5)
-            {
-                if (ProcessTableFormatting())
-                {
-                    e.Handled = true;
-                    return;
-                }
-            }
-
             if (prevKey == Key.LeftCtrl && e.Key == Key.Space)
             {
                 if (_completionWindow != null)
@@ -134,6 +125,11 @@ namespace GherkinEditorPlus.UserControls
 
         void Text_editor_text_area_text_entered(object sender, TextCompositionEventArgs e)
         {
+            if (e.Text == "|")
+            {
+                ProcessTableFormatting();
+            }
+
             if (showAutoComplete)
             {
                 DisplayAutoComplete();
@@ -267,7 +263,6 @@ namespace GherkinEditorPlus.UserControls
             if (currentLine.Length == column - 1)
             {
                 string lineText = textEditor.Document.GetText(currentLine);
-                lineText += "|";
 
                 if (lineText.Trim().StartsWith("|") && lineText.Trim().EndsWith("|"))
                 {
@@ -348,7 +343,6 @@ namespace GherkinEditorPlus.UserControls
                     if (TableFormatter.TryPrettyPrint(ugly, out pretty))
                     {
                         var offset = textEditor.Document.GetOffset(startingLineNumber, 1);
-
                         textEditor.Document.Replace(offset, tableLines.Sum(tl => tl.Length) + tableLines.Count * 2 - 2, pretty);
 
                         return true;
