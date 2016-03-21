@@ -40,9 +40,6 @@
             <Button Command="{Binding ElementName=_self, Path=SaveCommand}" ToolTip="Saves the current feature file (Ctrl-S)">
                 <Image Source="Images/Save.png" Height="16"/>
             </Button>
-            <Button Command="{Binding ElementName=_self, Path=SaveAllCommand}" ToolTip="Saves all open features">
-                <Image Source="Images/Save_all.png" Height="16"/>
-            </Button>
             <Separator/>
         </ToolBar>
         <Grid>

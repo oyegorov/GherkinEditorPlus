@@ -12,6 +12,7 @@ using GherkinEditorPlus.Utils;
 using log4net;
 using log4net.Config;
 using Microsoft.Win32;
+using TechTalk.SpecFlow.Generator;
 
 namespace GherkinEditorPlus
 {
@@ -20,7 +21,6 @@ namespace GherkinEditorPlus
         public ICommand CloseEditedFeatureCommand { get; set; }
         public ICommand OpenCommand { get; set; }
         public ICommand SaveCommand { get; set; }
-        public ICommand SaveAllCommand { get; set; }
 
 	    public static readonly DependencyProperty EditedFeaturesProperty = DependencyProperty.Register("EditedFeaturesProperty", typeof(ObservableCollection<Feature>), typeof(MainWindow), new PropertyMetadata(new ObservableCollection<Feature>()));
         public ObservableCollection<Feature> EditedFeatures
@@ -50,20 +50,11 @@ namespace GherkinEditorPlus
             OpenCommand = new DelegateCommand(Open);
             
             SaveCommand = new DelegateCommand(Save);
-            SaveAllCommand = new DelegateCommand(SaveAll);
 
             InitializeComponent();
 
             Logger.Instance.Info("Application started.");
         }
-
-	    private void SaveAll(object obj)
-	    {
-	        foreach (var editedFeature in EditedFeatures)
-	        {
-                SaveFeature(editedFeature);
-            }
-	    }
 
 	    private void Save(object obj)
 	    {
@@ -128,16 +119,22 @@ namespace GherkinEditorPlus
 	    {
 	        try
 	        {
-                ProjectManager.SaveFeature(feature);
-                Logger.Instance.Info($"Feature {feature.Name} has been saved successfully");
-            }
-            catch (Exception ex)
-            {
-                string error = $"Cannot save feature {feature.Name}";
-
+	            ProjectManager.SaveFeature(feature);
+	            Logger.Instance.Info($"Feature '{feature.Name}' has been saved successfully");
+	        }
+	        catch (TestGeneratorException ex)
+	        {
+                string error = $"Cannot generate code-behind for feature '{feature.Name}' {Environment.NewLine}{ex.Message}";
                 MessageBox.Show(error, App.ApplicationName, MessageBoxButton.OK, MessageBoxImage.Error);
-                Logger.Instance.Error(error, ex);
+                Logger.Instance.Warn(error, ex);
             }
+	        catch (Exception ex)
+	        {
+	            string error = $"Cannot save feature '{feature.Name}'";
+
+	            MessageBox.Show(error, App.ApplicationName, MessageBoxButton.OK, MessageBoxImage.Error);
+	            Logger.Instance.Error(error, ex);
+	        }
 	    }
 
 	    private void WindowClosing(object sender, CancelEventArgs e)
