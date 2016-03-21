@@ -36,6 +36,9 @@ namespace GherkinEditorPlus
             if (!File.Exists(projectFilePath))
                 throw new FileNotFoundException(projectFilePath);
 
+            if (_fileSystemWatcher != null)
+                _fileSystemWatcher.Changed -= FileAttributesChanged;
+
             XDocument csprojDocument = XDocument.Load(projectFilePath);
 
             var includedStaticFiles =
@@ -326,19 +329,6 @@ namespace GherkinEditorPlus
             }
 
             feature.IsReadOnly = isReadOnly;
-        }
-
-        private class FolderInternal
-        {
-            public string Name { get; set; }
-            public List<FolderInternal> Folders = new List<FolderInternal>();
-            public List<FeatureInternal> Features = new List<FeatureInternal>();
-        }
-
-        private class FeatureInternal
-        {
-            public string Name { get; set; }
-            public string FileName { get; set; }
         }
     }
 }

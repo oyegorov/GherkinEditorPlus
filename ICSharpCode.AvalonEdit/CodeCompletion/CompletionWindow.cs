@@ -35,7 +35,7 @@ namespace ICSharpCode.AvalonEdit.CodeCompletion
             this.TextArea.Document.Remove(this.TextArea.Caret.Offset-1,1);
             this.CloseAutomatically = true;
 			this.SizeToContent = SizeToContent.Height;
-			this.Width = 375;
+			this.Width = 800;
 			this.Content = completionList;
 			// prevent user from resizing window to 0x0
 			this.MinHeight = 15;
