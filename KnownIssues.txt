@@ -1,0 +1,2 @@
+1. Backspace does not update the filter.
+2. Root level features are not shown (we don't have any root level features in the project but still...)
