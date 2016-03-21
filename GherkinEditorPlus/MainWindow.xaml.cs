@@ -29,6 +29,14 @@ namespace GherkinEditorPlus
             set { SetValue(EditedFeaturesProperty, value); }
         }
 
+        public Project ActiveProject
+        {
+            get { return (Project)GetValue(ActiveProjectProperty); }
+            set { SetValue(ActiveProjectProperty, value); }
+        }
+        public static readonly DependencyProperty ActiveProjectProperty =
+            DependencyProperty.Register("ActiveProject", typeof(Project), typeof(MainWindow), new PropertyMetadata(null));
+
         public Feature ActiveFeature
         {
             get { return (Feature)GetValue(ActiveFeatureProperty); }
@@ -113,7 +121,8 @@ namespace GherkinEditorPlus
 
             _projectTreeView.Project = project;
             Application.Current.Properties["Project"] = project;
-        }
+	        ActiveProject = project;
+	    }
 
 	    private void SaveFeature(Feature feature)
 	    {

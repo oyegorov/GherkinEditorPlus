@@ -5,11 +5,19 @@
     xmlns:forms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
     xmlns:userControls="clr-namespace:GherkinEditorPlus.UserControls"
     xmlns:gherkinEditorPlus="clr-namespace:GherkinEditorPlus"
-    Title="Gherkin Editor Plus" WindowStartupLocation="CenterScreen"
+    WindowStartupLocation="CenterScreen"
     Icon="Images/gherkin.png"
     x:Name="_self"
     Closing="WindowClosing"
 	>
+    <Window.Title>
+        <Binding ElementName="_self" Path="ActiveProject">
+            <Binding.Converter>
+                <gherkinEditorPlus:TitleConverter />
+            </Binding.Converter>
+        </Binding>
+    </Window.Title>
+    
     <Window.InputBindings>
         <KeyBinding Modifiers="Control" Key="O" Command="{Binding ElementName=_self, Path=OpenCommand}" />
         <KeyBinding Modifiers="Control" Key="S" Command="{Binding ElementName=_self, Path=SaveCommand}" />

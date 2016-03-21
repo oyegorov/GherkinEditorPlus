@@ -150,6 +150,7 @@
     <Compile Include="ProjectManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\WPFAssemblyInfo.cs" />
+    <Compile Include="TitleConverter.cs" />
     <Compile Include="UserControls\ReadOnlyColorConverter.cs" />
     <Compile Include="StepsProvider.cs" />
     <Compile Include="TabTitleConverter.cs" />
