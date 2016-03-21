@@ -35,8 +35,8 @@ namespace GherkinEditorPlus.UserControls
 
         public ProjectTreeView()
         {
-            AddFeatureCommand = new DelegateCommand(AddFeature, (o) => !Project.IsReadOnly && (_treeView.SelectedItem == null || _treeView.SelectedItem is Folder));
-            AddFolderCommand = new DelegateCommand(AddFolder, (o) => !Project.IsReadOnly && (_treeView.SelectedItem == null || _treeView.SelectedItem is Folder));
+            AddFeatureCommand = new DelegateCommand(AddFeature, (o) => Project != null && !Project.IsReadOnly && (_treeView.SelectedItem == null || _treeView.SelectedItem is Folder));
+            AddFolderCommand = new DelegateCommand(AddFolder, (o) => Project != null && !Project.IsReadOnly && (_treeView.SelectedItem == null || _treeView.SelectedItem is Folder));
 
             InitializeComponent();
         }
