@@ -51,7 +51,8 @@ namespace GherkinEditorPlus
             var includedFeatures = includedStaticFiles.Where(f => f.EndsWith(".feature", StringComparison.OrdinalIgnoreCase));
 
             _currentProject = new Project(new FileInfo(projectFilePath).Name, defaultNamespace, Path.GetFullPath(projectFilePath), new List<Feature>(), new List<Folder>());
-            
+            _currentProject.IsReadOnly = new FileInfo(projectFilePath).IsReadOnly;
+
             foreach (string includedFeature in includedFeatures)
             {
                 string[] parts = includedFeature.Split(new[] {@"\"}, StringSplitOptions.RemoveEmptyEntries);
@@ -309,6 +310,12 @@ namespace GherkinEditorPlus
         private static void FileAttributesChanged(object sender, FileSystemEventArgs e)
         {
             string file = e.FullPath;
+
+            if (String.Equals(file, _currentProject.File, StringComparison.OrdinalIgnoreCase))
+            {
+                _currentProject.IsReadOnly = new FileInfo(file).IsReadOnly;
+                return;
+            }
 
             if (!file.EndsWith(".feature.cs") && !file.EndsWith(".feature"))
                 return;

@@ -5,8 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:GherkinEditorPlus.UserControls"
              xmlns:model="clr-namespace:GherkinEditorPlus.Model"
+             xmlns:gherkinEditorPlus="clr-namespace:GherkinEditorPlus"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300" x:Name="_self">
+    <UserControl.Resources>
+        <gherkinEditorPlus:ReadOnlyColorConverter x:Key="ReadOnlyConverter"/>
+    </UserControl.Resources>
+
     <Grid>
  
         <Grid.RowDefinitions>
@@ -38,7 +43,8 @@
                 </Style>
             </TextBox.Style>
         </TextBox>-->
-        <TreeView Grid.Row="1" Margin="2" BorderBrush="Gainsboro" ItemsSource="{Binding Path=Project.Folders, ElementName=_self}" PreviewMouseRightButtonDown="OnPreviewMouseRightButtonDown" x:Name="_treeView">
+        <TreeView Grid.Row="1" Margin="2" BorderBrush="Gainsboro" ItemsSource="{Binding Path=Project.Folders, ElementName=_self}" PreviewMouseRightButtonDown="OnPreviewMouseRightButtonDown" x:Name="_treeView"
+                  Background="{Binding ElementName=_self, Converter={StaticResource ReadOnlyConverter}, Path=Project.IsReadOnly}">
             <TreeView.Resources>
                 <local:ProjectItemsConverter x:Key="ProjectItemsConverter"/>
 
