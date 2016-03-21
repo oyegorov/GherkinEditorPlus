@@ -40,14 +40,13 @@ namespace GherkinEditorPlus
         {
             CloseEditedFeatureCommand = new DelegateCommand(CloseEditedFeature);
             OpenCommand = new DelegateCommand(Open);
+            
             SaveCommand = new DelegateCommand(Save);
             SaveAllCommand = new DelegateCommand(SaveAll);
 
             InitializeComponent();
 
             Logger.Instance.Info("Application started.");
-
-            LoadProject(@"..\..\SampleProject\Bdd.PublicApiTests.csproj");
         }
 
 	    private void SaveAll(object obj)

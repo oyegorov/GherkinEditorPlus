@@ -103,15 +103,11 @@ namespace GherkinEditorPlus.UserControls
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
-            if (prevKey == Key.LeftCtrl && e.Key == Key.S)
-            {
-                ProjectManager.SaveFeature(Feature);
-            }
-            else if (prevKey == Key.LeftCtrl && e.Key == Key.F)
+            if (prevKey == Key.LeftCtrl && e.Key == Key.F && !Feature.IsReadOnly)
             {
                 ProcessTableFormatting(true);
             }
-            else if (prevKey == Key.LeftCtrl && e.Key == Key.Space)
+            else if (prevKey == Key.LeftCtrl && e.Key == Key.Space && !Feature.IsReadOnly)
             {
                 if (_completionWindow != null)
                 {

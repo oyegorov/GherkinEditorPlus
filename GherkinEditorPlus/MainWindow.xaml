@@ -10,6 +10,11 @@
     x:Name="_self"
     Closing="WindowClosing"
 	>
+    <Window.InputBindings>
+        <KeyBinding Modifiers="Control" Key="O" Command="{Binding ElementName=_self, Path=OpenCommand}" />
+        <KeyBinding Modifiers="Control" Key="S" Command="{Binding ElementName=_self, Path=SaveCommand}" />
+    </Window.InputBindings>
+    
     <DockPanel>
         <ToolBar DockPanel.Dock="Top">
             <ToolBar.Resources>
@@ -21,10 +26,10 @@
                     </Style.Triggers>
                 </Style>
             </ToolBar.Resources>
-            <Button Command="{Binding ElementName=_self, Path=OpenCommand}" ToolTip="Opens a project">
+            <Button Command="{Binding ElementName=_self, Path=OpenCommand}" ToolTip="Opens a project (Ctrl-O)">
                 <Image Source="Images/Open.png" Height="16"/>
             </Button>
-            <Button Command="{Binding ElementName=_self, Path=SaveCommand}" ToolTip="Saves the current feature file">
+            <Button Command="{Binding ElementName=_self, Path=SaveCommand}" ToolTip="Saves the current feature file (Ctrl-S)">
                 <Image Source="Images/Save.png" Height="16"/>
             </Button>
             <Button Command="{Binding ElementName=_self, Path=SaveAllCommand}" ToolTip="Saves all open features">
