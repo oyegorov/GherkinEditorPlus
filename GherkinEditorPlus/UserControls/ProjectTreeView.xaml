@@ -9,7 +9,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300" x:Name="_self">
     <UserControl.Resources>
-        <gherkinEditorPlus:ReadOnlyColorConverter x:Key="ReadOnlyConverter"/>
+        <local:ReadOnlyColorConverter x:Key="ReadOnlyConverter"/>
     </UserControl.Resources>
 
     <Grid>
