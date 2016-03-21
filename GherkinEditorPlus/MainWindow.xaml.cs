@@ -84,7 +84,7 @@ namespace GherkinEditorPlus
         {
             var featureToClose = (Feature) o;
 
-            if (!featureToClose.Modified || MessageBox.Show($"Your changes will be lost. Close window?", "Gherkin Editor Plus", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            if (!featureToClose.Modified || MessageBox.Show($"Your changes will be lost. Close window?", App.ApplicationName, MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 int newActiveFeatureIndex = Math.Max(EditedFeatures.IndexOf(featureToClose) - 1, 0);
 
@@ -97,23 +97,45 @@ namespace GherkinEditorPlus
 
 	    private void LoadProject(string fileName)
 	    {
-            EditedFeatures.Clear();
+	        Project project = null;
+            try
+	        {
+	            EditedFeatures.Clear();
+	            project = ProjectManager.LoadProject(fileName);
+	        }
+            catch (Exception ex)
+            {
+                string error = $"Cannot load project {fileName}";
 
-            Project project = ProjectManager.LoadProject(fileName);
+                MessageBox.Show(error, App.ApplicationName, MessageBoxButton.OK, MessageBoxImage.Error);
+                Logger.Instance.Error(error, ex);
+            }
+
             _projectTreeView.Project = project;
             Application.Current.Properties["Project"] = project;
         }
 
 	    private void SaveFeature(Feature feature)
 	    {
-	        ProjectManager.SaveFeature(feature);
+	        try
+	        {
+                ProjectManager.SaveFeature(feature);
+                Logger.Instance.Info($"Feature {feature.Name} has been saved successfully");
+            }
+            catch (Exception ex)
+            {
+                string error = $"Cannot save feature {feature.Name}";
+
+                MessageBox.Show(error, App.ApplicationName, MessageBoxButton.OK, MessageBoxImage.Error);
+                Logger.Instance.Error(error, ex);
+            }
 	    }
 
 	    private void WindowClosing(object sender, CancelEventArgs e)
 	    {
 	        if (EditedFeatures.Any(f => f.Modified))
 	        {
-	            if (MessageBox.Show("There are unsaved files. All your changes will be lost. \r\nContinue?", "Gherkin Editor Plus", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
+	            if (MessageBox.Show("There are unsaved files. All your changes will be lost. \r\nContinue?", App.ApplicationName, MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
 	                e.Cancel = true;
 	        }
 	    }

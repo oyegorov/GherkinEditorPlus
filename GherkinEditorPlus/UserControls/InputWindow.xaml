@@ -12,8 +12,8 @@
         <TextBox Text="{Binding ElementName=_self, Path=EnteredText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True, BindsDirectlyToSource=True}"></TextBox>
         
         <StackPanel Margin="0, 20, 0, 0" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Width="80" Command="{Binding ElementName=_self, Path=OkCommand}">OK</Button>
-            <Button Width="80" Margin="10,0,0,0" Command="{Binding ElementName=_self, Path=CancelCommand}">Cancel</Button>
+            <Button Width="80" Command="{Binding ElementName=_self, Path=OkCommand}" IsDefault="True">OK</Button>
+            <Button Width="80" Margin="10,0,0,0" Command="{Binding ElementName=_self, Path=CancelCommand}" IsCancel="True">Cancel</Button>
         </StackPanel>
     </StackPanel>
 </Window>
