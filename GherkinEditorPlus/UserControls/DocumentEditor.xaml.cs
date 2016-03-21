@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -22,8 +23,8 @@ namespace GherkinEditorPlus.UserControls
     /// </summary>
     public partial class DocumentEditor : UserControl
     {
-        private string[] stepKeywords = new[] { "When ", "Then ", "And ", "Given " };
-        private string[] finalKeywords = { "Scenario: ", "Scenario Outline: ", "Background: " };
+        private string[] stepKeywords = { "When ", "Then ", "And ", "Given " };
+        private string[] finalKeywords = { "Scenario: ", "Scenario Outline: ", "Background: ", "Examples: ", "Feature: " };
 
         private CompletionWindow _completionWindow;
         private readonly Languages _languages;
@@ -57,8 +58,7 @@ namespace GherkinEditorPlus.UserControls
 
             textEditor.TextArea.TextEntering += Text_editor_text_area_text_entering;
             textEditor.TextArea.TextEntered += Text_editor_text_area_text_entered;
-            textEditor.TextChanged += TextEditor_TextChanged;
-
+            textEditor.TextChanged += TextEditor_TextChanged;            
             var foldingUpdateTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
             foldingUpdateTimer.Tick += Folding_update_timer_tick;
             foldingUpdateTimer.Start();
@@ -72,6 +72,14 @@ namespace GherkinEditorPlus.UserControls
 
         private void TextEditor_TextChanged(object sender, EventArgs e)
         {
+            if (_completionWindow != null && _completionWindow.Inserting)
+            {
+                _completionWindow.Inserting = false;
+                _completionWindow.Close();
+
+                UpdateAutoComplete();
+            }
+
             Feature.Modified = true;
             Feature.Text = textEditor.Text;
         }
@@ -109,14 +117,11 @@ namespace GherkinEditorPlus.UserControls
             }
             else if (prevKey == Key.LeftCtrl && e.Key == Key.Space && !Feature.IsReadOnly)
             {
-                if (_completionWindow != null)
+                if (UpdateAutoComplete())
                 {
+                    prevKey = null;
                     e.Handled = true;
-                    return;
                 }
-
-                prevKey = null;
-                showAutoComplete = true;
             }
             else
             {
@@ -131,45 +136,43 @@ namespace GherkinEditorPlus.UserControls
             if (e.Text == "|")
             {
                 ProcessTableFormatting(false);
+                return;
             }
 
-            if (showAutoComplete)
-            {
-                DisplayAutoComplete();
-            }
-
-            if (_completionWindow != null)
-            {
-                var data = _completionWindow.CompletionList.CompletionData;
-
-                var filter = GetCurrentFilter();
-
-                if (!filter.FilteredItems.Any())
-                {
-                    _completionWindow.Close();
-                    _completionWindow = null;
-                }
-                else
-                {
-                    data.Clear();
-
-                    filter.FilteredItems.ForEach(w => data.Add(new GherkinCompletionItem(w.Text, w.Description)));
-                }
-            }
-
-            showAutoComplete = false;
+            UpdateAutoComplete();
         }
 
-        private void DisplayAutoComplete()
+        private bool UpdateAutoComplete()
         {
-            _completionWindow = new CompletionWindow(textEditor.TextArea);
-            var data = _completionWindow.CompletionList.CompletionData;
-
             var filter = GetCurrentFilter();
-            filter.FilteredItems.ForEach(w => data.Add(new GherkinCompletionItem(w.Text, w.Description)));
 
-            _completionWindow.Show();
-            _completionWindow.Closed += delegate { _completionWindow = null; };
+            if (!filter.FilteredItems.Any())
+            {
+                if (_completionWindow != null)
+                    _completionWindow.Close();
+
+                _completionWindow = null;
+            }
+            else
+            {
+                if (_completionWindow == null)
+                {
+                    _completionWindow = new CompletionWindow(textEditor.TextArea);
+                }
+
+                _completionWindow.completionList.FilterLength = filter.FilterText.Length;
+
+                var data = _completionWindow.CompletionList.CompletionData;
+
+                data.Clear();
+
+                filter.FilteredItems.ForEach(w => data.Add(new GherkinCompletionItem(w.Text, w.Description)));
+
+                _completionWindow.Show();
+                _completionWindow.Closed += delegate { _completionWindow = null; };
+            }
+
+            return filter.FilteredItems.Any();
         }
 
         private Filter GetCurrentFilter()

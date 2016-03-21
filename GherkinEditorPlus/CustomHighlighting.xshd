@@ -7,7 +7,7 @@
 
     <!-- This is the main ruleset. -->
     <RuleSet>
-        <Span color="Comment" begin="//" />
+        <Span color="Comment" begin="#" />
         <Span color="Comment" multiline="true" begin="/\*" end="\*/" />
 
         <Span color="Parameter" begin=" '" end="' "></Span>
