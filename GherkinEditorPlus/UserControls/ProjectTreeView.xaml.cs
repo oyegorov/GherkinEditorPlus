@@ -101,7 +101,17 @@ namespace GherkinEditorPlus.UserControls
             var inputWindow = new InputWindow("Enter new folder name:");
             if (inputWindow.ShowDialog() == true && !String.IsNullOrWhiteSpace(inputWindow.EnteredText))
             {
-                ProjectManager.AddFolder(_treeView.SelectedItem as Folder ?? Project, inputWindow.EnteredText);
+                try
+                {
+                    ProjectManager.AddFolder(_treeView.SelectedItem as Folder ?? Project, inputWindow.EnteredText);
+                }
+                catch (Exception ex)
+                {
+                    string error = $"Cannot add folder to the project";
+                    MessageBox.Show(error, App.ApplicationName, MessageBoxButton.OK, MessageBoxImage.Error);
+
+                    Logger.Instance.Error(error, ex);
+                }
             }
         }
 
@@ -110,7 +120,17 @@ namespace GherkinEditorPlus.UserControls
             var inputWindow = new InputWindow("Enter new feature name:");
             if (inputWindow.ShowDialog() == true && !String.IsNullOrWhiteSpace(inputWindow.EnteredText))
             {
-                ProjectManager.AddFeature(Project, _treeView.SelectedItem as Folder ?? Project, inputWindow.EnteredText);
+                try
+                {
+                    ProjectManager.AddFeature(Project, _treeView.SelectedItem as Folder ?? Project, inputWindow.EnteredText);
+                }
+                catch (Exception ex)
+                {
+                    string error = $"Cannot add feature to the project";
+                    MessageBox.Show(error, App.ApplicationName, MessageBoxButton.OK, MessageBoxImage.Error);
+
+                    Logger.Instance.Error(error, ex);
+                }
             }
         }
     }

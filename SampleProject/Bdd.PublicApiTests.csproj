@@ -171,6 +171,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Features\test.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>test.feature</DependentUpon>
+    </Compile>
     <Compile Include="Steps\CreateRuleStepsAndroid.cs" />
     <Compile Include="Steps\DeviceConfigurationManagementSteps.cs" />
     <Compile Include="Steps\DeviceNoteManagementSteps.cs" />
@@ -628,6 +633,10 @@
     <None Include="Features\SpecifyProfileAssignmentOptions.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>SpecifyProfileAssignmentOptions.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\test.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>test.feature.cs</LastGenOutput>
     </None>
     <None Include="Features\UploadApnsCertificate.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>

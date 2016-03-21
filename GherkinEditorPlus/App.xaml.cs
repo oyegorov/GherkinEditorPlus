@@ -31,6 +31,8 @@ namespace GherkinEditorPlus
 	/// </summary>
 	public partial class App : Application
 	{
+	    public const string ApplicationName = "Gherkin Editor Plus";
+
 		public App()
 		{
 			InitializeComponent();
