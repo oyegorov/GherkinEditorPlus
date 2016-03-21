@@ -107,28 +107,8 @@ namespace GherkinEditorPlus
 
 	    private void SaveFeature(Feature feature)
 	    {
-            var currentProject = (Project)Application.Current.Properties["Project"];
-
-	        string codeBehindFileName = feature.File + ".cs";
-
-	        string folderNamespace = String.Empty;
-	        string featureFolder = Path.GetDirectoryName(feature.File);
-	        string projectFolder = Path.GetDirectoryName(currentProject.File);
-
-	        if (!String.Equals(featureFolder, projectFolder) && featureFolder.StartsWith(projectFolder, StringComparison.OrdinalIgnoreCase))
-	        {
-	            folderNamespace = featureFolder.Substring(projectFolder.Length).Replace("\\", ".");
-	        }
-
-	        string codeBehindNamespace = currentProject.DefaultNamespace + folderNamespace;
-
-	        string codeBehind = feature.GetCodeBehind(codeBehindNamespace);
-
-            File.WriteAllText(feature.File, feature.Text);
-            File.WriteAllText(codeBehindFileName, codeBehind);
-
-            feature.Modified = false;
-        }
+	        ProjectManager.SaveFeature(feature);
+	    }
 
 	    private void WindowClosing(object sender, CancelEventArgs e)
 	    {

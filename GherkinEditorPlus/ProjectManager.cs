@@ -330,5 +330,28 @@ namespace GherkinEditorPlus
 
             feature.IsReadOnly = isReadOnly;
         }
+
+        public static void SaveFeature(Feature feature)
+        {
+            string codeBehindFileName = feature.File + ".cs";
+
+            string folderNamespace = String.Empty;
+            string featureFolder = Path.GetDirectoryName(feature.File);
+            string projectFolder = Path.GetDirectoryName(_currentProject.File);
+
+            if (!String.Equals(featureFolder, projectFolder) && featureFolder.StartsWith(projectFolder, StringComparison.OrdinalIgnoreCase))
+            {
+                folderNamespace = featureFolder.Substring(projectFolder.Length).Replace("\\", ".");
+            }
+
+            string codeBehindNamespace = _currentProject.DefaultNamespace + folderNamespace;
+
+            string codeBehind = feature.GetCodeBehind(codeBehindNamespace);
+
+            File.WriteAllText(feature.File, feature.Text);
+            File.WriteAllText(codeBehindFileName, codeBehind);
+
+            feature.Modified = false;
+        }
     }
 }
