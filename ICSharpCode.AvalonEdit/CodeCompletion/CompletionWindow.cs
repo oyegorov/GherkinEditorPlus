@@ -25,6 +25,8 @@ namespace ICSharpCode.AvalonEdit.CodeCompletion
 	{
 		public readonly CompletionList completionList = new CompletionList();
 		ToolTip toolTip = new ToolTip();
+
+        public bool Inserting { get; set; }
 		
 		/// <summary>
 		/// Creates a new code completion window.
@@ -32,7 +34,7 @@ namespace ICSharpCode.AvalonEdit.CodeCompletion
 		public CompletionWindow(TextArea textArea) : base(textArea)
 		{
 			// keep height automatic
-            this.TextArea.Document.Remove(this.TextArea.Caret.Offset-1,1);
+//            this.TextArea.Document.Remove(this.TextArea.Caret.Offset-1,1);
             this.CloseAutomatically = true;
 			this.SizeToContent = SizeToContent.Height;
 			this.Width = 800;
@@ -86,6 +88,8 @@ namespace ICSharpCode.AvalonEdit.CodeCompletion
 
                 this.TextArea.Selection = new SimpleSelection(offset - completionList.FilterLength, offset);
                 this.TextArea.RemoveSelectedText();
+
+                Inserting = true;
 
                 item.Complete(this.TextArea, new AnchorSegment(this.TextArea.Document, this.StartOffset, this.EndOffset - this.StartOffset), e);
             }
