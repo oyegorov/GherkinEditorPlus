@@ -7,6 +7,8 @@ namespace GherkinEditorPlus.Model
 {
     public class Project : Folder
     {
+        private bool _isReadOnly;
+
         public Project(string name, string defaultNamespace, string file, IEnumerable<Feature> features, IEnumerable<Folder> folders) : base(name, features, folders)
         {
             if (defaultNamespace == null)
@@ -22,6 +24,19 @@ namespace GherkinEditorPlus.Model
         public string File { get; }
 
         public string DefaultNamespace { get; }
+
+        public bool IsReadOnly
+        {
+            get
+            {
+                return _isReadOnly;
+            }
+            set
+            {
+                _isReadOnly = value;
+                OnPropertyChanged();
+            }
+        }
 
         public Step[] GetAllSteps()
         {
