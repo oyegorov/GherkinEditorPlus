@@ -138,12 +138,16 @@ namespace GherkinEditorPlus.UserControls
                 ProcessTableFormatting(false);
                 return;
             }
-
-            UpdateAutoComplete();
+            
+            if (e.Text != "\n")
+                UpdateAutoComplete();
         }
 
         private bool UpdateAutoComplete()
         {
+            if (Feature.IsReadOnly)
+                return false;
+
             var filter = GetCurrentFilter();
 
             if (!filter.FilteredItems.Any())

@@ -91,7 +91,7 @@ namespace ICSharpCode.AvalonEdit.CodeCompletion
 
                 Inserting = true;
 
-                item.Complete(this.TextArea, new AnchorSegment(this.TextArea.Document, this.StartOffset, this.EndOffset - this.StartOffset), e);
+                item.Complete(this.TextArea, new AnchorSegment(this.TextArea.Document, offset-completionList.FilterLength, 0), e);
             }
 			Close();
 		}
