@@ -65,15 +65,22 @@ namespace GherkinEditorPlus.Model
 
         public Feature GetFeatureByFile(string fullPath)
         {
-            return Folders.SelectMany(
-                f =>
-                    f.Folders.SelectMany(fo => fo.Features)
-                        .Union(Folders.SelectMany(fo => fo.Features))).SingleOrDefault(f => f.File == fullPath);
+            return FlattenFeatures(this).SingleOrDefault(f => String.Equals(f.File, fullPath, StringComparison.OrdinalIgnoreCase));
         }
 
         public override string ToString()
         {
             return $"Project Name: '{Name}'";
+        }
+
+        private IEnumerable<Feature> FlattenFeatures(Folder parent)
+        {
+            foreach (var feature in parent.Features)
+                yield return feature;
+
+            foreach (Folder childFolder in parent.Folders)
+                foreach (Feature feature in FlattenFeatures(childFolder))
+                    yield return feature;
         }
     }
 }
