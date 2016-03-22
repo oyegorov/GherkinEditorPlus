@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using TechTalk.SpecFlow.Generator;
 using TechTalk.SpecFlow.Generator.Interfaces;
@@ -81,7 +82,12 @@ namespace GherkinEditorPlus.Model
             };
 
             var generatedTestFile = generator.GenerateTestFile(featureInput, new GenerationSettings());
-            return generatedTestFile.Success ? generatedTestFile.GeneratedTestCode : String.Empty;
+
+            if (generatedTestFile.Success)
+                return generatedTestFile.GeneratedTestCode;
+
+            string errorMessage =String.Join(Environment.NewLine, generatedTestFile.Errors.Select(e => $"(Line {e.Line}, Pos {e.LinePosition}) {e.Message}"));
+            throw new TestGeneratorException(errorMessage);
         }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
