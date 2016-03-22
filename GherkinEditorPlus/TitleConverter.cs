@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Deployment.Application;
 using System.Globalization;
+using System.Reflection;
 using System.Windows.Data;
 using GherkinEditorPlus.Model;
 
@@ -11,7 +13,11 @@ namespace GherkinEditorPlus
         {
             var project = value as Project;
 
-            return project == null ? "Gherkin Editor Plus" : $"Gherkin Editor Plus - {project.File}";
+            string version = String.Empty;
+            if (ApplicationDeployment.IsNetworkDeployed)
+                version = $" ({ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString()})";
+
+            return project == null ? $"Gherkin Editor Plus{version}" : $"Gherkin Editor Plus{version}- {project.File}";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
