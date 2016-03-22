@@ -80,6 +80,9 @@
   <PropertyGroup>
     <SignManifests>true</SignManifests>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>gherkin.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Gherkin">
       <HintPath>..\libs\SpecFlow\Gherkin.dll</HintPath>
@@ -266,6 +269,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\save_all.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="gherkin.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
 </Project>
