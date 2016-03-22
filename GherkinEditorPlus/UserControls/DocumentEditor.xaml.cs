@@ -109,6 +109,14 @@ namespace GherkinEditorPlus.UserControls
             textEditor.SyntaxHighlighting = HighlightingManager.Instance.GetDefinitionByExtension(Path.GetExtension(documentPath));
         }
 
+        protected override void OnPreviewKeyDown(KeyEventArgs e)
+        {
+            if (textEditor.IsReadOnly && e.Key == Key.Delete)
+                e.Handled = true;
+
+            base.OnPreviewKeyDown(e);
+        }
+
         protected override void OnKeyDown(KeyEventArgs e)
         {
             if (prevKey == Key.LeftCtrl && e.Key == Key.F && !Feature.IsReadOnly)
