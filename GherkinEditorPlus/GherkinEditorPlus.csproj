@@ -30,7 +30,7 @@
     <PublisherName>SOTI Inc.</PublisherName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>default.html</WebPage>
-    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationRevision>2</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -79,6 +79,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>gherkin.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Gherkin">
@@ -265,6 +268,10 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\save_all.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="gherkin.ico" />
+    <Content Include="Images\gherkin.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
 </Project>
