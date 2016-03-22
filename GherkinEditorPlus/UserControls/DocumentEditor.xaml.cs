@@ -189,6 +189,8 @@ namespace GherkinEditorPlus.UserControls
 
             if (finalKeywords.Any(k => filter.StartsWith(k, StringComparison.InvariantCultureIgnoreCase)))
             {
+                FixCasing(finalKeywords);
+
                 keywords = new CompleionItem[0];
             }
             else 
@@ -201,6 +203,8 @@ namespace GherkinEditorPlus.UserControls
                     {
                         filter = filter.Remove(0, gherkinKeyword.Length);
                         startsWithStepKeyword = true;
+
+                        FixCasing(stepKeywords);
                     }
                 }
 
@@ -220,6 +224,26 @@ namespace GherkinEditorPlus.UserControls
                         && filter.Length != w.Text.Length).ToList();
 
             return new Filter {FilterText = filter, FilteredItems = filteredItems};
+        }
+
+        private void FixCasing(string[] keywords)
+        {
+            var lineOffset = textEditor.Document.GetOffset(textEditor.TextArea.Caret.Line, 1);
+
+            var line = textEditor.Document.GetLineByNumber(textEditor.TextArea.Caret.Line);
+
+            string lineText = textEditor.Document.GetText(lineOffset, line.Length);
+
+            foreach (var keyword in keywords)
+            {
+                int indexOfKeyword = lineText.IndexOf(keyword, StringComparison.InvariantCultureIgnoreCase);
+
+                if (indexOfKeyword != -1)
+                {
+                    textEditor.Document.Replace(lineOffset + indexOfKeyword, keyword.Length, keyword);
+                    break;
+                }
+            }
         }
 
         private bool HasLanguageLine()
