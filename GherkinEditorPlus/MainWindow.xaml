@@ -18,6 +18,14 @@
         </Binding>
     </Window.Title>
     
+    <Window.Resources>
+        <ContextMenu x:Key="TabMenu">
+            <ContextMenu.Items>
+                <MenuItem Header="Open Containing Folder" Click="OpenContainingFolder_OnClick"></MenuItem>
+            </ContextMenu.Items>
+        </ContextMenu>
+    </Window.Resources>
+    
     <Window.InputBindings>
         <KeyBinding Modifiers="Control" Key="O" Command="{Binding ElementName=_self, Path=OpenCommand}" />
         <KeyBinding Modifiers="Control" Key="S" Command="{Binding ElementName=_self, Path=SaveCommand}" />
@@ -62,7 +70,17 @@
                         <userControls:DocumentEditor Feature="{Binding}"></userControls:DocumentEditor>
                     </DataTemplate>
                 </TabControl.ContentTemplate>
-
+                
+                <TabControl.ItemContainerStyle>
+                    <Style TargetType="{x:Type TabItem}">
+                        <Setter Property="ContextMenu">
+                            <Setter.Value>
+                                <StaticResource ResourceKey="TabMenu" />
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </TabControl.ItemContainerStyle>
+                
                 <TabControl.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">

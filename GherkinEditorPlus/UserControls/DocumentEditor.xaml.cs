@@ -58,7 +58,6 @@ namespace GherkinEditorPlus.UserControls
 
             textEditor.TextArea.TextEntering += Text_editor_text_area_text_entering;
             textEditor.TextArea.TextEntered += Text_editor_text_area_text_entered;
-            textEditor.TextChanged += TextEditor_TextChanged;            
             var foldingUpdateTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
             foldingUpdateTimer.Tick += Folding_update_timer_tick;
             foldingUpdateTimer.Start();
@@ -98,15 +97,13 @@ namespace GherkinEditorPlus.UserControls
             var feature = e.NewValue as Feature;
             if (feature != null)
             {
-                self.LoadDocument(feature.File);
-                feature.Modified = false;
-            }
-        }
+                self.textEditor.TextChanged -= self.TextEditor_TextChanged;
 
-        public void LoadDocument(string documentPath)
-        {
-            textEditor.Load(documentPath);
-            textEditor.SyntaxHighlighting = HighlightingManager.Instance.GetDefinitionByExtension(Path.GetExtension(documentPath));
+                self.textEditor.Text = feature.Text;
+                self.textEditor.SyntaxHighlighting = HighlightingManager.Instance.GetDefinitionByExtension(Path.GetExtension(feature.File));
+
+                self.textEditor.TextChanged += self.TextEditor_TextChanged;
+            }
         }
 
         protected override void OnPreviewKeyDown(KeyEventArgs e)

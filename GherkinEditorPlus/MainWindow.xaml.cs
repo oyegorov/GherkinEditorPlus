@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using GherkinEditorPlus.Model;
@@ -144,6 +146,14 @@ namespace GherkinEditorPlus
 	            if (MessageBox.Show("There are unsaved files. All your changes will be lost. \r\nContinue?", App.ApplicationName, MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
 	                e.Cancel = true;
 	        }
+	    }
+
+	    private void OpenContainingFolder_OnClick(object sender, RoutedEventArgs e)
+	    {
+	        var clickedFeature = (((MenuItem) sender).Parent as FrameworkElement).DataContext as Feature;
+
+	        if (clickedFeature != null)
+	            Process.Start(Path.GetDirectoryName(clickedFeature.File));
 	    }
 	}
 }
